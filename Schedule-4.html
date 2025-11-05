@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Bell Schedule & Countdown</title>
+    <style>
+        :root {
+            --bg-color: #f4f4f9;
+            --text-color: #333;
+            --header-bg: #800000;
+            --header-text: white;
+            --card-bg: white;
+            --border-color: #ccc;
+            --current-period-bg: #d4edda;
+            --current-period-text: #155724;
+            --next-period-bg: #fff3cd;
+            --next-period-text: #856404;
+            --button-bg: #800000;
+            --button-text: white;
+            --current-time-color: #4CAF50;
+        }
+
+        .dark-mode {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --header-bg: #e0e0e0;
+            --header-text: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #333;
+            --current-period-bg: #1c3d25;
+            --current-period-text: #a8dadc;
+            --next-period-bg: #3e381d;
+            --next-period-text: #ffd54f;
+            --button-bg: #e0e0e0;
+            --button-text: #121212;
+            --current-time-color: #66bb6a;
+        }
+
+        .blue-theme {
+            --bg-color: #e3f2fd;
+            --text-color: #0d47a1;
+            --header-bg: #1976d2;
+            --header-text: white;
+            --card-bg: white;
+            --border-color: #90caf9;
+            --current-period-bg: #bbdefb;
+            --current-period-text: #0d47a1;
+            --next-period-bg: #fff9c4;
+            --next-period-text: #f57f17;
+            --button-bg: #1976d2;
+            --button-text: white;
+            --current-time-color: #1976d2;
+        }
+
+        .green-theme {
+            --bg-color: #e8f5e9;
+            --text-color: #1b5e20;
+            --header-bg: #2e7d32;
+            --header-text: white;
+            --card-bg: white;
+            --border-color: #81c784;
+            --current-period-bg: #c8e6c9;
+            --current-period-text: #1b5e20;
+            --next-period-bg: #fff3e0;
+            --next-period-text: #e65100;
+            --button-bg: #2e7d32;
+            --button-text: white;
+            --current-time-color: #2e7d32;
+        }
+
+        .purple-theme {
+            --bg-color: #f3e5f5;
+            --text-color: #4a148c;
+            --header-bg: #7b1fa2;
+            --header-text: white;
+            --card-bg: white;
+            --border-color: #ce93d8;
+            --current-period-bg: #e1bee7;
+            --current-period-text: #4a148c;
+            --next-period-bg: #fff9c4;
+            --next-period-text: #f57f17;
+            --button-bg: #7b1fa2;
+            --button-text: white;
+            --current-time-color: #7b1fa2;
+        }
+
+        .orange-theme {
+            --bg-color: #fff3e0;
+            --text-color: #e65100;
+            --header-bg: #f57c00;
+            --header-text: white;
+            --card-bg: white;
+            --border-color: #ffb74d;
+            --current-period-bg: #ffe0b2;
+            --current-period-text: #e65100;
+            --next-period-bg: #c8e6c9;
+            --next-period-text: #1b5e20;
+            --button-bg: #f57c00;
+            --button-text: white;
+            --current-time-color: #f57c00;
+        }
+
+        .dark-mode h1, .blue-theme h1, .green-theme h1, .purple-theme h1, .orange-theme h1 {
+            color: var(--text-color);
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        h1 {
+            color: var(--header-bg);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .dark-mode h1 {
+            color: var(--text-color);
+        }
+
+        #theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+            z-index: 1000;
+        }
+
+        #theme-toggle:hover {
+            opacity: 0.8;
+        }
+
+        .status-card {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.3s;
+        }
+
+        #current-time {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--current-time-color);
+            margin-bottom: 10px;
+        }
+
+        #current-period, #time-left {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .current {
+            background-color: var(--current-period-bg);
+            color: var(--current-period-text);
+            font-weight: bold;
+        }
+
+        .next {
+            background-color: var(--next-period-bg);
+            color: var(--next-period-text);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+            margin-top: 0;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(128, 0, 0, 0.05);
+        }
+
+        .dark-mode tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .blue-theme tr:nth-child(even) {
+            background-color: rgba(25, 118, 210, 0.05);
+        }
+
+        .green-theme tr:nth-child(even) {
+            background-color: rgba(46, 125, 50, 0.05);
+        }
+
+        .purple-theme tr:nth-child(even) {
+            background-color: rgba(123, 31, 162, 0.05);
+        }
+
+        .orange-theme tr:nth-child(even) {
+            background-color: rgba(245, 124, 0, 0.05);
+        }
+
+        .highlight-cell {
+            background-color: var(--current-period-bg) !important;
+            color: var(--current-period-text) !important;
+            font-weight: bold;
+            border: 2px solid var(--current-period-text) !important;
+        }
+
+        #share-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 15px;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+            z-index: 1000;
+        }
+
+        #share-button:hover {
+            opacity: 0.8;
+        }
+
+        .share-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .share-popup.active {
+            display: block;
+        }
+
+        .share-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1999;
+        }
+
+        .share-overlay.active {
+            display: block;
+        }
+
+        .share-popup h2 {
+            margin-top: 0;
+            color: var(--text-color);
+            border: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+
+        .share-popup p {
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+
+        .share-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin: 10px 0;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            color: var(--text-color);
+        }
+
+        .share-option:hover {
+            transform: scale(1.02);
+        }
+
+        .share-option svg {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+        }
+
+        .close-popup {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-color);
+            background: none;
+            border: none;
+        }
+
+        .help-section {
+            margin-top: 25px;
+            padding: 20px;
+            background: var(--bg-color);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .help-section h3 {
+            margin-top: 0;
+            color: var(--text-color);
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .help-step {
+            margin-bottom: 15px;
+            padding-left: 10px;
+        }
+
+        .help-step strong {
+            color: var(--header-bg);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .dark-mode .help-step strong,
+        .blue-theme .help-step strong,
+        .green-theme .help-step strong,
+        .purple-theme .help-step strong,
+        .orange-theme .help-step strong {
+            color: var(--current-time-color);
+        }
+
+        .help-step p {
+            margin: 5px 0;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 15px 0;
+            color: #856404;
+        }
+
+        .dark-mode .warning-box {
+            background: #3e381d;
+            border-color: #ffd54f;
+            color: #ffd54f;
+        }
+
+        .warning-box strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .tip-box {
+            background: #d4edda;
+            border: 1px solid #28a745;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 15px 0;
+            color: #155724;
+        }
+
+        .dark-mode .tip-box {
+            background: #1c3d25;
+            border-color: #66bb6a;
+            color: #a8dadc;
+        }
+
+        .tip-box strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <button id="share-button">📤 Share</button>
+    <button id="theme-toggle">Switch Theme</button>
+
+    <div class="share-overlay" id="share-overlay"></div>
+    <div class="share-popup" id="share-popup">
+        <button class="close-popup" id="close-popup">&times;</button>
+        <h2>Download Schedule</h2>
+        <p>Click below to download this schedule as an HTML file that you can share with others!</p>
+        <div class="share-option" id="download-html">
+            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"/></svg>
+            <span>Download HTML File</span>
+        </div>
+
+        <div class="help-section">
+            <h3>📚 How to Use This File</h3>
+            
+            <div class="help-step">
+                <strong>💾 Saving the File</strong>
+                <p><strong>Windows:</strong> Save to your Desktop or Documents folder for easy access. You can drag the file directly to your Desktop!</p>
+                <p><strong>Mac:</strong> Save to your Desktop, Documents, or create a "School" folder.</p>
+                <p><strong>Chromebook:</strong> Save to Downloads or your Google Drive for safekeeping.</p>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Important Warning!</strong>
+                <p>If you move or delete the HTML file, any bookmarks to it will stop working. Keep the file in the same location!</p>
+            </div>
+
+            <div class="help-step">
+                <strong>🔖 Bookmarking in Chrome</strong>
+                <p><strong>Method 1:</strong> Drag the HTML file from your file explorer directly onto Chrome's bookmark bar.</p>
+                <p><strong>Method 2:</strong> Open the file in Chrome, then press <strong>Ctrl+D</strong> (Windows) or <strong>Cmd+D</strong> (Mac) to bookmark it.</p>
+                <p><strong>Method 3:</strong> Click the star icon ⭐ in Chrome's address bar, then select "Bookmarks bar".</p>
+            </div>
+
+            <div class="tip-box">
+                <strong>💡 Pro Tips</strong>
+                <p>• You can rename the file to anything you want (like "MySchedule.html") - it will still work!</p>
+                <p>• Create a "School" folder on your Desktop and keep the file there permanently.</p>
+                <p>• The file works offline - no internet needed once downloaded!</p>
+                <p>• Your theme preference is saved automatically in your browser.</p>
+            </div>
+
+            <div class="help-step">
+                <strong>📱 Using on Mobile</strong>
+                <p><strong>iPhone/iPad:</strong> Save to Files app, then open with Safari. Add to Home Screen for quick access!</p>
+                <p><strong>Android:</strong> Save to Downloads, open with Chrome. Bookmark or add to Home Screen.</p>
+            </div>
+
+            <div class="help-step">
+                <strong>🔄 Sharing with Others</strong>
+                <p>• Email the HTML file as an attachment</p>
+                <p>• Upload to Google Drive and share the link</p>
+                <p>• Send via messaging apps (WhatsApp, Discord, etc.)</p>
+                <p>• Copy to a USB drive for offline sharing</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Current Status</h1>
+        <div class="status-card">
+            <div id="current-time"></div>
+            <div id="current-period">Loading schedule...</div>
+            <div id="time-left"></div>
+        </div>
+
+        <h1>Bell Schedule</h1>
+        <div class="table-wrapper">
+            <table id="schedule-table">
+                <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Monday, Tuesday, Thursday, Friday</th>
+                        <th>Wednesday (Ranger Connect)</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const SCHEDULE_DATA = [
+            { period: "1", days: "Mon, Tue, Thu, Fri", start: "7:45", end: "8:35" },
+            { period: "1", days: "Wed", start: "7:45", end: "8:30" },
+            { period: "2", days: "Mon, Tue, Thu, Fri", start: "8:40", end: "9:30" },
+            { period: "2", days: "Wed", start: "8:35", end: "9:25" },
+            { period: "3", days: "Mon, Tue, Thu, Fri", start: "9:35", end: "10:25" },
+            { period: "3", days: "Wed", start: "9:30", end: "10:15" },
+            { period: "4", days: "Mon, Tue, Thu, Fri", start: "10:30", end: "11:20" },
+            { period: "4", days: "Wed", start: "10:20", end: "11:05" },
+            { period: "Ranger Connect", days: "Wed", start: "11:10", end: "11:35" },
+            { period: "A Lunch", days: "Mon, Tue, Thu, Fri", start: "11:20", end: "11:50" },
+            { period: "B Lunch", days: "Mon, Tue, Thu, Fri", start: "11:45", end: "12:15" },
+            { period: "C Lunch", days: "Mon, Tue, Thu, Fri", start: "12:15", end: "12:45" },
+            { period: "A Lunch", days: "Wed", start: "11:35", end: "12:05" },
+            { period: "B Lunch", days: "Wed", start: "12:00", end: "12:30" },
+            { period: "C Lunch", days: "Wed", start: "12:25", end: "12:55" },
+            { period: "5", days: "Mon, Tue, Thu, Fri", start: "11:25", end: "12:40" },
+            { period: "5", days: "Wed", start: "11:40", end: "12:50" },
+            { period: "6", days: "Mon, Tue, Thu, Fri", start: "12:45", end: "13:35" },
+            { period: "6", days: "Wed", start: "12:55", end: "13:40" },
+            { period: "7", days: "Mon, Tue, Thu, Fri", start: "13:40", end: "14:30" },
+            { period: "7", days: "Wed", start: "13:45", end: "14:30" }
+        ];
+
+        // Theme toggle with multiple themes
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        const themes = ['', 'dark-mode', 'blue-theme', 'green-theme', 'purple-theme', 'orange-theme'];
+        const themeNames = ['Maroon (Default)', 'Dark Mode', 'Blue', 'Green', 'Purple', 'Orange'];
+        let currentThemeIndex = 0;
+
+        function loadTheme() {
+            const saved = localStorage.getItem('theme');
+            const index = themes.indexOf(saved);
+            if (index !== -1) {
+                currentThemeIndex = index;
+            }
+            applyTheme();
+        }
+
+        function applyTheme() {
+            // Remove all theme classes first
+            themes.forEach(theme => {
+                if (theme) body.classList.remove(theme);
+            });
+            // Add the current theme class if it's not empty
+            if (themes[currentThemeIndex]) {
+                body.classList.add(themes[currentThemeIndex]);
+            }
+            themeToggle.textContent = `Theme: ${themeNames[currentThemeIndex]}`;
+        }
+
+        themeToggle.addEventListener('click', () => {
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            applyTheme();
+            localStorage.setItem('theme', themes[currentThemeIndex]);
+        });
+
+        // Share functionality
+        const shareButton = document.getElementById('share-button');
+        const sharePopup = document.getElementById('share-popup');
+        const shareOverlay = document.getElementById('share-overlay');
+        const closePopup = document.getElementById('close-popup');
+        const copyLink = document.getElementById('copy-link');
+        const downloadHtml = document.getElementById('download-html');
+
+        function openSharePopup() {
+            sharePopup.classList.add('active');
+            shareOverlay.classList.add('active');
+        }
+
+        function closeSharePopup() {
+            sharePopup.classList.remove('active');
+            shareOverlay.classList.remove('active');
+        }
+
+        shareButton.addEventListener('click', openSharePopup);
+        closePopup.addEventListener('click', closeSharePopup);
+        shareOverlay.addEventListener('click', closeSharePopup);
+
+        downloadHtml.addEventListener('click', () => {
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'school-schedule.html';
+            a.click();
+            URL.revokeObjectURL(url);
+            closeSharePopup();
+        });
+
+        // Generate table
+        function generateTable() {
+            const tbody = document.querySelector('#schedule-table tbody');
+            const periods = [
+                { name: "1", mon_fri: "7:45am - 8:35am", wed: "7:45am - 8:30am" },
+                { name: "2", mon_fri: "8:40am - 9:30am", wed: "8:35am - 9:25am" },
+                { name: "3", mon_fri: "9:35am - 10:25am", wed: "9:30am - 10:15am" },
+                { name: "4", mon_fri: "10:30am - 11:20am", wed: "10:20am - 11:05am" },
+                { name: "Ranger Connect", mon_fri: "N/A", wed: "11:10am - 11:35am" },
+                { name: "5", mon_fri: "11:25am - 12:40pm", wed: "11:40am - 12:50pm" },
+                { name: "A Lunch", mon_fri: "11:20am - 11:50am", wed: "11:35am - 12:05pm" },
+                { name: "B Lunch", mon_fri: "11:45am - 12:15pm", wed: "12:00pm - 12:30pm" },
+                { name: "C Lunch", mon_fri: "12:15pm - 12:45pm", wed: "12:25pm - 12:55pm" },
+                { name: "6", mon_fri: "12:45pm - 1:35pm", wed: "12:55pm - 1:40pm" },
+                { name: "7", mon_fri: "1:40pm - 2:30pm", wed: "1:45pm - 2:30pm" }
+            ];
+
+            tbody.innerHTML = periods.map(p => `
+                <tr>
+                    <td>${p.name}</td>
+                    <td>${p.mon_fri}</td>
+                    <td>${p.wed}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Time functions
+        function timeToMinutes(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            return hours * 60 + minutes;
+        }
+
+        function formatCountdown(minutes) {
+            const m = Math.floor(minutes);
+            const s = Math.round((minutes - m) * 60);
+            return `${m}m ${s.toString().padStart(2, '0')}s`;
+        }
+
+        // Update schedule
+        function updateSchedule() {
+            const now = new Date();
+            const timeDisplay = document.getElementById('current-time');
+            const periodDisplay = document.getElementById('current-period');
+            const timeLeftDisplay = document.getElementById('time-left');
+
+            timeDisplay.textContent = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true 
+            });
+
+            const day = now.getDay();
+            const isWeekend = day === 0 || day === 6;
+            const isWed = day === 3;
+            
+            // Clear all highlights first
+            document.querySelectorAll('td').forEach(cell => {
+                cell.classList.remove('highlight-cell');
+            });
+            
+            if (isWeekend) {
+                periodDisplay.textContent = 'School is OUT! Enjoy your weekend.';
+                timeLeftDisplay.textContent = '';
+                return;
+            }
+
+            const nowMinutes = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+            
+            if (nowMinutes >= 14 * 60 + 30) {
+                periodDisplay.textContent = 'School Day is Over!';
+                timeLeftDisplay.textContent = 'See you tomorrow.';
+                return;
+            }
+
+            const dayFilter = isWed ? "Wed" : "Mon, Tue, Thu, Fri";
+            const applicable = SCHEDULE_DATA
+                .filter(item => item.days === dayFilter)
+                .map(item => ({
+                    ...item,
+                    startMin: timeToMinutes(item.start),
+                    endMin: timeToMinutes(item.end)
+                }))
+                .sort((a, b) => a.startMin - b.startMin);
+
+            let current = null;
+            let next = null;
+
+            for (const item of applicable) {
+                if (nowMinutes >= item.startMin && nowMinutes < item.endMin) {
+                    if (!current || item.endMin < current.endMin) {
+                        current = item;
+                    }
+                } else if (nowMinutes < item.startMin && !next) {
+                    next = item;
+                }
+            }
+
+            // Highlight the current period in the table
+            if (current) {
+                const rows = document.querySelectorAll('#schedule-table tbody tr');
+                rows.forEach(row => {
+                    const periodCell = row.cells[0].textContent.trim();
+                    const matchesPeriod = periodCell === current.period || 
+                                        (periodCell === "5" && current.period === "5") ||
+                                        (current.period.includes("Lunch") && periodCell.includes("Lunch") && current.period.includes(periodCell.split(' ')[0]));
+                    
+                    if (matchesPeriod) {
+                        // Highlight the correct column: 1 for Mon-Fri, 2 for Wed
+                        const columnIndex = isWed ? 2 : 1;
+                        row.cells[columnIndex].classList.add('highlight-cell');
+                    }
+                });
+
+                const timeLeft = current.endMin - nowMinutes;
+                const endTime = new Date();
+                endTime.setHours(Math.floor(current.endMin / 60), current.endMin % 60, 0);
+                periodDisplay.textContent = `Current Period: ${current.period} (ends at ${endTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })})`;
+                timeLeftDisplay.textContent = `Time left in ${current.period}: ${formatCountdown(timeLeft)}`;
+            } else if (next) {
+                const timeToNext = next.startMin - nowMinutes;
+                periodDisplay.textContent = 'Currently Passing Time/Break';
+                timeLeftDisplay.textContent = `Next Period: ${next.period} starts in ${formatCountdown(timeToNext)}`;
+            } else {
+                periodDisplay.textContent = 'Before school hours';
+                timeLeftDisplay.textContent = 'School starts at 7:45 AM';
+            }
+        }
+
+        // Initialize
+        loadTheme();
+        generateTable();
+        updateSchedule();
+        setInterval(updateSchedule, 1000);
+    </script>
+</body>
+</html>
+      
