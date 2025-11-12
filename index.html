@@ -1,0 +1,799 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Forest Lake – Bell Schedule (Themes + Fullscreen Countdown)</title>
+<style>
+:root{
+  --bg:#f4f4f9; --text:#222; --card:#fff; --accent:#800000; --accent-strong:#4CAF50;
+  --border:#cfc9d2; --muted:#666; --fab:#8b0000; --shadow:0 10px 30px rgba(20,20,30,0.06);
+  --arrow-bg: rgba(0,0,0,0.06);
+  --transition-fast: 220ms cubic-bezier(.2,.9,.3,1);
+}
+/* Layout + components */
+html,body{margin:0;padding:0;height:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+.app{max-width:1100px;margin:18px auto;padding:18px;background:var(--card);border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow);box-sizing:border-box}
+h1{margin:0;color:var(--accent);font-size:1.3rem}
+.meta{font-size:.88rem;color:var(--muted);margin-top:6px}
+.status-card{margin-top:16px;padding:12px;border-radius:10px;border:1px solid var(--border);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+#current-time{font-weight:700;font-size:1.1rem;color:var(--accent-strong)}
+.status-info{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0}
+#current-period{font-weight:600}
+#time-left{color:var(--accent-strong)}
+.local-text{margin-left:auto;font-size:.86rem;color:var(--muted)}
+.layout{display:grid;grid-template-columns:1fr 300px;gap:14px;margin-top:16px;align-items:start}
+@media (max-width:980px){ .layout{grid-template-columns:1fr} }
+.left-col{display:flex;flex-direction:column;gap:14px}
+.table-wrap{border-radius:10px;border:1px solid var(--border);padding:8px;background:var(--card);text-align:center}
+.table-wrap h3{margin:6px 0 8px 0;color:var(--accent);font-size:1rem;text-align:center}
+table{width:100%;border-collapse:collapse;font-size:.92rem;table-layout:fixed;margin:0 auto}
+table thead th{padding:10px 8px;border:1px solid var(--border);background:var(--accent);color:#fff;font-size:.72rem;text-transform:uppercase}
+table tbody td{padding:8px;border:1px solid var(--border);vertical-align:middle;text-align:center}
+td.highlight{background:rgba(76,175,80,0.08);color:var(--accent-strong);font-weight:700;border-left:3px solid rgba(76,175,80,0.14)}
+.week-wrap{border-radius:10px;border:1px solid var(--border);padding:8px;background:var(--card)}
+.week-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.week-grid{display:grid;gap:8px;margin-top:10px;grid-template-columns:repeat(5,minmax(120px,1fr))}
+@media(max-width:900px){ .week-grid{grid-template-columns:1fr} }
+.day{border-radius:8px;border:1px solid var(--border);padding:8px;background:var(--card)}
+.day-head{font-weight:700;color:var(--accent);display:flex;justify-content:space-between}
+.ev{background:rgba(76,175,80,0.08);padding:8px 10px;border-radius:8px;border:1px solid var(--border);font-size:.95rem}
+.ev.small{opacity:.7;font-size:.9rem}
+.right-column{display:flex;flex-direction:column;gap:12px;align-items:stretch;height:100%}
+.weather-card{border-radius:10px;border:1px solid var(--border);background:var(--card);padding:12px;box-shadow:0 8px 22px rgba(0,0,0,0.04);transition:all var(--transition-fast);box-sizing:border-box;overflow:visible;display:flex;flex-direction:column;gap:6px;width:100%;position:relative}
+.weather-header{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.weather-main{display:flex;gap:10px;align-items:center;min-width:0}
+.wx-emoji{font-size:48px;width:64px;display:flex;align-items:center;justify-content:center}
+.wx-temp{font-weight:800;color:var(--accent-strong);font-size:22px}
+.wx-high{font-size:0.9rem;color:var(--muted);margin-left:6px}
+.wx-desc{color:var(--muted);font-size:.88rem;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.weather-collapsed-body{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px;border-radius:8px;background:linear-gradient(180deg,#fff,#fff);min-height:56px;margin-bottom:0}
+.weather-collapsed-body .label{font-weight:700;font-size:15px;color:var(--muted)}
+.weather-collapsed-body .sub{font-size:13px;color:var(--muted)}
+.hourly-panel{margin-top:4px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:0 10px 30px rgba(0,0,0,0.06);overflow:hidden;max-height:0;opacity:0;transition:max-height var(--transition-fast),opacity var(--transition-fast)}
+.weather-card.expanded .hourly-panel{max-height:420px;opacity:1}
+.hourly-viewport{height:336px;overflow:hidden;padding:6px 8px 8px 8px;box-sizing:border-box}
+.hourly-list{display:flex;flex-direction:column;gap:8px;transition:transform .24s ease}
+.hourly-item{display:flex;align-items:center;gap:8px;padding:6px;border-radius:8px;border:1px solid var(--border);background:#fff;min-height:44px}
+.hourly-item .time{width:56px;font-weight:700;text-align:center}
+.hourly-item .cond{flex:1;color:var(--muted);font-size:.92rem}
+.hourly-item .temp{min-width:48px;text-align:right;font-weight:700;color:var(--accent-strong)}
+.arrow-btn{position:absolute;width:38px;height:30px;border-radius:8px;border:1px solid var(--border);background:var(--arrow-bg);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 14px rgba(0,0,0,0.06)}
+.arrow-up{right:8px;top:8px}
+.arrow-down{right:8px;bottom:8px}
+.arrow-btn.hidden{display:none}
+.fab-wrap{position:fixed;right:20px;bottom:20px;z-index:1600;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+#fab-main{width:56px;height:56px;border-radius:50%;background:var(--fab);color:#fff;border:0;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;box-shadow:0 14px 36px rgba(0,0,0,0.25)}
+.slide-layer{display:none;flex-direction:column;gap:8px;align-items:flex-end}
+.slide-item{display:flex;align-items:center;gap:8px}
+.slide-label{background:#fff;border:1px solid var(--border);padding:6px 8px;border-radius:8px;color:var(--muted);font-weight:700;font-size:.8rem}
+.slide-btn{width:44px;height:44px;border-radius:10px;background:var(--accent);color:#fff;border:0;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.theme-palette{display:none;position:fixed;bottom:90px;right:20px;padding:10px;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,0.18);z-index:1700;border:1px solid var(--border);background:var(--card)}
+.theme-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.theme-option{width:40px;height:32px;border-radius:8px;border:2px solid transparent;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.04)}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;align-items:center;justify-content:center}
+.modal-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;width:420px;max-width:95%}
+.modal-card h3{margin:0 0 10px 0;color:var(--accent)}
+.modal-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.modal-row:last-child{border-bottom:none}
+select,input[type=checkbox]{padding:6px;border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--text)}
+button{cursor:pointer}
+
+/* Fullscreen countdown overlay */
+#fullscreen-popup{position:fixed;inset:0;background:rgba(0,0,0,0.96);display:flex;align-items:center;justify-content:center;z-index:99999;opacity:0;pointer-events:none;transition:opacity .22s ease}
+#fullscreen-popup[aria-hidden="false"]{opacity:1;pointer-events:auto}
+#fullscreen-popup-inner{position:relative;max-width:1400px;width:100%;padding:40px 28px;box-sizing:border-box;text-align:center;color:#fff}
+#fullscreen-close{position:absolute;right:18px;top:18px;background:transparent;border:0;color:#fff;font-size:32px;cursor:pointer;padding:6px;border-radius:8px;opacity:.95}
+#fullscreen-content{display:flex;flex-direction:column;align-items:center;gap:18px;justify-content:center;min-height:260px}
+.fs-period{font-size:56px;font-weight:800;letter-spacing:-1px}
+.fs-sub{font-size:20px;color:rgba(255,255,255,0.85)}
+.fs-countdown{font-size:140px;font-weight:900;line-height:1;color:#ffcc00;text-shadow:0 6px 28px rgba(0,0,0,0.6)}
+.fs-ms{font-size:28px;color:rgba(255,255,255,0.85)}
+@media(max-width:900px){ .fs-countdown{font-size:72px} .fs-period{font-size:32px} .fs-sub{font-size:16px} .fs-ms{font-size:16px} }
+@media (max-width:520px){
+  .layout{grid-template-columns:1fr}
+  .wx-emoji{font-size:40px;width:56px}
+  .wx-temp{font-size:20px}
+  .table-wrap{padding:6px}
+  table thead th, table tbody td {padding:6px}
+}
+</style>
+</head>
+<body class="theme-default">
+<div class="app">
+  <header style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+    <div>
+      <h1>Forest Lake – Bell Schedule</h1>
+      <div class="meta">2025–2026 School Year</div>
+    </div>
+  </header>
+
+  <div class="status-card">
+    <div id="current-time">--:--:--</div>
+    <div class="status-info">
+      <div id="current-period">Current: —</div>
+      <div>Time left: <span id="time-left">—</span></div>
+    </div>
+    <div class="local-text">Local Time</div>
+  </div>
+
+  <div class="layout">
+    <div class="left-col">
+      <div class="table-wrap">
+        <h3>Bell Schedule</h3>
+        <table id="schedule-table" aria-label="Bell schedule">
+          <colgroup><col /><col /><col /></colgroup>
+          <thead>
+            <tr><th>Period</th><th>Mon–Fri</th><th>Wed (Ranger Connect)</th></tr>
+          </thead>
+          <tbody id="schedule-body">
+            <tr><td>1</td><td>07:45–08:35</td><td>07:45–08:30</td></tr>
+            <tr><td>2</td><td>08:40–09:30</td><td>08:35–09:25</td></tr>
+            <tr><td>3</td><td>09:35–10:25</td><td>09:30–10:15</td></tr>
+            <tr><td>4</td><td>10:30–11:20</td><td>10:20–11:05</td></tr>
+            <tr><td>Ranger Connect</td><td>—</td><td>11:10–11:35</td></tr>
+            <tr><td>5</td><td>11:25–12:40</td><td>11:40–12:50</td></tr>
+            <tr><td>A Lunch</td><td>11:25–11:55</td><td>11:40–12:10</td></tr>
+            <tr><td>B Lunch</td><td>11:45–12:15</td><td>12:00–12:30</td></tr>
+            <tr><td>C Lunch</td><td>12:10–12:40</td><td>12:20–12:50</td></tr>
+            <tr><td>6</td><td>12:45–13:35</td><td>12:55–13:40</td></tr>
+            <tr><td>7</td><td>13:40–14:30</td><td>13:45–14:30</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="week-wrap">
+        <div class="week-head">
+          <div style="display:flex;gap:6px;align-items:center">
+            <button id="prev-week">← Prev</button>
+            <button id="next-week">Next →</button>
+          </div>
+          <div id="week-range">—</div>
+          <div><button id="return-week" style="display:none">Current Week</button></div>
+        </div>
+        <div id="week-grid" class="week-grid" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <aside class="right-column">
+      <div class="weather-card" id="weather-card" title="Click to expand hourly forecast" role="region" aria-label="Weather">
+        <div class="weather-header">
+          <div class="weather-main">
+            <div class="wx-emoji" id="wx-emoji">⛅</div>
+            <div style="min-width:0">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="wx-temp" id="wx-temp">--°F</div>
+                <div class="wx-high" id="wx-high" aria-hidden="true"></div>
+              </div>
+              <div id="wx-desc" class="wx-desc">Loading…</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="weather-collapsed-body" id="weather-collapsed">
+          <div class="label" id="collapsed-label">—</div>
+          <div class="sub" id="collapsed-sub">Click to view hourly forecast</div>
+        </div>
+
+        <div class="hourly-panel" id="hourly-panel" aria-hidden="true">
+          <button class="arrow-btn arrow-up hidden" id="arrow-up" aria-hidden="true">▲</button>
+          <div class="hourly-viewport">
+            <div class="hourly-list" id="hourly-list" role="list" aria-hidden="true"></div>
+          </div>
+          <button class="arrow-btn arrow-down hidden" id="arrow-down" aria-hidden="true">▼</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- FAB -->
+<div class="fab-wrap">
+  <div class="slide-layer" id="slide-layer" aria-hidden="true">
+    <div class="slide-item"><div class="slide-label">Fullscreen</div><button class="slide-btn" id="btn-fullscreen" title="Pop fullscreen countdown">⏱️</button></div>
+    <div class="slide-item"><div class="slide-label">Bookmark</div><button class="slide-btn" id="btn-bookmark">🔖</button></div>
+    <div class="slide-item"><div class="slide-label">Download</div><button class="slide-btn" id="btn-download">⬇️</button></div>
+    <div class="slide-item"><div class="slide-label">Share</div><button class="slide-btn" id="btn-share">📤</button></div>
+    <div class="slide-item"><div class="slide-label">Theme</div><button class="slide-btn" id="btn-theme">🎨</button></div>
+    <div class="slide-item"><div class="slide-label">Settings</div><button class="slide-btn" id="btn-settings">⚙️</button></div>
+  </div>
+  <button id="fab-main" aria-label="+ menu">+</button>
+</div>
+
+<!-- Fullscreen popup -->
+<div id="fullscreen-popup" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
+  <div id="fullscreen-popup-inner">
+    <button id="fullscreen-close" aria-label="Close fullscreen countdown">✕</button>
+    <div id="fullscreen-content" role="status" aria-live="polite">
+      <div id="fs-period" class="fs-period">—</div>
+      <div id="fs-sub" class="fs-sub">—</div>
+      <div id="fs-countdown" class="fs-countdown">0m 00s</div>
+      <div id="fs-ms" class="fs-ms" aria-hidden="true"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Theme palette (10 themes) -->
+<div class="theme-palette" id="theme-palette" aria-hidden="true">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+    <strong>Choose Theme</strong>
+    <button id="theme-close">Close</button>
+  </div>
+
+  <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Dark themes</div>
+  <div class="theme-grid" id="theme-grid-dark" style="margin-bottom:12px">
+    <div class="theme-option" data-theme="dark-ink" title="Dark Ink" style="background:linear-gradient(135deg,#0b0f13,#161a1f)"></div>
+    <div class="theme-option" data-theme="dark-slate" title="Slate" style="background:linear-gradient(135deg,#0f1720,#24303a)"></div>
+    <div class="theme-option" data-theme="dark-forest" title="Forest" style="background:linear-gradient(135deg,#0b2a1a,#153e2a)"></div>
+    <div class="theme-option" data-theme="dark-ocean" title="Ocean" style="background:linear-gradient(135deg,#002733,#004d66)"></div>
+    <div class="theme-option" data-theme="dark-plum" title="Plum" style="background:linear-gradient(135deg,#2a0f25,#4a1f3b)"></div>
+  </div>
+
+  <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Light themes</div>
+  <div class="theme-grid" id="theme-grid-light">
+    <div class="theme-option" data-theme="light-clean" title="Clean" style="background:linear-gradient(135deg,#ffffff,#f3f6f8)"></div>
+    <div class="theme-option" data-theme="light-sand" title="Sand" style="background:linear-gradient(135deg,#fff7ef,#fff0e0)"></div>
+    <div class="theme-option" data-theme="light-mint" title="Mint" style="background:linear-gradient(135deg,#f0fff7,#e6fff1)"></div>
+    <div class="theme-option" data-theme="light-sky" title="Sky" style="background:linear-gradient(135deg,#f2fbff,#e6f7ff)"></div>
+    <div class="theme-option" data-theme="light-lavender" title="Lavender" style="background:linear-gradient(135deg,#fbf5ff,#f2eaff)"></div>
+  </div>
+</div>
+
+<!-- Settings modal -->
+<div class="modal" id="settings-modal" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <h3 id="settings-title">⚙️ Settings</h3>
+    <div class="modal-row"><span>Time Format</span><select id="time-format"><option value="12">12-hour</option><option value="24">24-hour</option></select></div>
+    <div class="modal-row"><span>Show Seconds</span><input type="checkbox" id="show-seconds" checked /></div>
+    <div class="modal-row"><span>Show Milliseconds</span><input type="checkbox" id="show-milliseconds" /></div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px"><button id="settings-close">Close</button></div>
+  </div>
+</div>
+
+<script>
+/* ========================= Config / Data ========================= */
+const SCHEDULE = [
+  { period:"1", monFri:"07:45-08:35", wed:"07:45-08:30" },
+  { period:"2", monFri:"08:40-09:30", wed:"08:35-09:25" },
+  { period:"3", monFri:"09:35-10:25", wed:"09:30-10:15" },
+  { period:"4", monFri:"10:30-11:20", wed:"10:20-11:05" },
+  { period:"Ranger Connect", monFri:"", wed:"11:10-11:35" },
+  { period:"5", monFri:"11:25-12:40", wed:"11:40-12:50" },
+  { period:"A Lunch", monFri:"11:25-11:55", wed:"11:40-12:10" },
+  { period:"B Lunch", monFri:"11:45-12:15", wed:"12:00-12:30" },
+  { period:"C Lunch", monFri:"12:10-12:40", wed:"12:20-12:50" },
+  { period:"6", monFri:"12:45-13:35", wed:"12:55-13:40" },
+  { period:"7", monFri:"13:40-14:30", wed:"13:45-14:30" }
+];
+
+const EVENTS = [
+  { start: '2025-09-02', end: '2025-09-02', title: 'First day | K-5, 6, 9 & STEP' },
+  { start: '2025-09-03', end: '2025-09-03', title: 'First day | 7, 10-12' },
+  { start: '2025-09-04', end: '2025-09-04', title: 'First day | Grade 8' },
+  { start: '2025-10-15', end: '2025-10-15', title: 'No School (E-5 only) | Elementary conferences' },
+  { start: '2025-10-16', end: '2025-10-17', title: 'No School | Fall break' },
+  { start: '2025-10-31', end: '2025-10-31', title: 'End of Quarter 1' },
+  { start: '2025-11-03', end: '2025-11-03', title: 'No School' },
+  { start: '2025-11-26', end: '2025-11-28', title: 'No School | Thanksgiving Break' },
+  { start: '2025-12-24', end: '2026-01-02', title: 'No School | Winter Break' },
+  { start: '2026-01-01', end: '2026-01-02', title: 'No School' },
+  { start: '2026-01-16', end: '2026-01-16', title: 'End of Quarter 2' },
+  { start: '2026-01-19', end: '2026-01-20', title: 'No School' },
+  { start: '2026-02-16', end: '2026-02-16', title: 'No School' },
+  { start: '2026-03-06', end: '2026-03-06', title: 'No School (E-5 only) | Elementary conferences' },
+  { start: '2026-03-09', end: '2026-03-13', title: 'No School | Spring break' },
+  { start: '2026-04-01', end: '2026-04-01', title: 'End of Quarter 3' },
+  { start: '2026-04-02', end: '2026-04-03', title: 'No School' },
+  { start: '2026-05-04', end: '2026-05-04', title: 'No School' },
+  { start: '2026-05-22', end: '2026-05-22', title: 'No School (E-5 only)' },
+  { start: '2026-05-25', end: '2026-05-25', title: 'No School | Memorial Day observed' },
+  { start: '2026-06-04', end: '2026-06-04', title: 'Last day | K-12 & STEP' }
+];
+
+let settings = { timeFormat:12, showSeconds:true, showMilliseconds:false };
+let weekType = '5';
+
+/* ========================= Utilities ========================= */
+const parseISO = s => { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); };
+const ymd = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const addDays = (d,n)=>{ const r=new Date(d.getFullYear(),d.getMonth(),d.getDate()); r.setDate(r.getDate()+n); return r; };
+const eventsForDate = d => EVENTS.filter(ev=>ymd(parseISO(ev.start))<=ymd(d)&&ymd(parseISO(ev.end))>=ymd(d));
+
+/* ========================= Time helpers ========================= */
+function timeToMin(t){
+  if(!t) return NaN;
+  const token = String(t).trim().replace('–','-').split('-')[0].trim();
+  const m = token.match(/^(\d{1,2})(?::(\d{1,2}))?$/);
+  if(!m) return NaN;
+  let hh = Number(m[1]), mm = Number(m[2]||0);
+  return hh*60 + mm;
+}
+function fmtCountdown(min, withMs=false){
+  if(min <= 0) return '0m 00s';
+  const totalSeconds = Math.floor(min*60);
+  const minutes = Math.floor(totalSeconds/60);
+  const seconds = totalSeconds % 60;
+  if(withMs){
+    const frac = Math.max(0, min*60 - totalSeconds);
+    const ms = Math.floor(frac*1000);
+    return `${minutes}m ${String(seconds).padStart(2,'0')}s ${String(ms).padStart(3,'0')}ms`;
+  }
+  return `${minutes}m ${String(seconds).padStart(2,'0')}s`;
+}
+
+/* Build numeric schedule items */
+function buildNumericItems(key){
+  return SCHEDULE.filter(s=>s[key] && s[key].trim()!=='').map(s=>{
+    const parts = s[key].replace('–','-').split('-').map(p=>p.trim());
+    const start = timeToMin(parts[0]||'');
+    let end = timeToMin(parts[1]||parts[0]||'');
+    if(!isNaN(start) && !isNaN(end) && end <= start) end += 12*60;
+    return {...s, start, end};
+  }).filter(it=>!isNaN(it.start) && !isNaN(it.end)).sort((a,b)=>a.start-b.start);
+}
+
+/* ========================= Clock + schedule highlight (improved ms handling) ========================= */
+const timeEl = document.getElementById('current-time');
+let mainTickInterval = null; // coarse updater (1s or 250ms)
+let msInterval = null;       // when ms enabled this updates ms every millisecond
+let rafId = null;            // optional RAF for smooth updates
+
+function pad(n,len=2){ return String(n).padStart(len,'0'); }
+
+function formatClockParts(now){
+  const h = now.getHours();
+  const m = pad(now.getMinutes());
+  const s = pad(now.getSeconds());
+  const ms = String(now.getMilliseconds()).padStart(3,'0');
+  return {h,m,s,ms,amp: h>=12?'PM':'AM'};
+}
+
+// single function to render the full clock string based on settings and a Date object
+function renderClock(now){
+  const {h,m,s,ms,amp} = formatClockParts(now);
+  let out;
+  if(settings.timeFormat === 12){
+    const hh = ((now.getHours()%12)||12);
+    out = `${hh}:${m}`;
+  } else {
+    out = `${String(now.getHours()).padStart(2,'0')}:${m}`;
+  }
+  if(settings.showSeconds) out += `:${s}`;
+  if(settings.showMilliseconds) out += `.${ms}`;
+  if(settings.timeFormat === 12) out += ` ${amp}`;
+  timeEl.textContent = out;
+}
+
+// coarseTick updates schedule logic and the coarse clock text (no ms)
+function coarseTick(){
+  const now = new Date();
+  // render clock (without ms if ms disabled; if ms enabled this still renders coarse part)
+  renderClock(now);
+
+  // schedule logic
+  const day = now.getDay(); const isWeekend = (day===0||day===6); const isWed = (day===3);
+  if(isWeekend){
+    document.getElementById('current-period').textContent='School is OUT – Enjoy the weekend!';
+    document.getElementById('time-left').textContent='';
+    highlight(null,false);
+    return;
+  }
+
+  const nowMin = now.getHours()*60 + now.getMinutes() + now.getSeconds()/60 + now.getMilliseconds()/60000;
+  const key = isWed ? 'wed' : 'monFri';
+  const items = buildNumericItems(key);
+
+  const active = items.find(it=>nowMin >= it.start && nowMin < it.end) || null;
+  const next = items.find(it=>nowMin < it.start) || null;
+
+  if(active){
+    const endH = Math.floor(active.end/60), endM = Math.round(active.end%60);
+    const endDate = new Date(); endDate.setHours(endH, endM, 0);
+    document.getElementById('current-period').textContent = `Current: ${/Lunch/i.test(active.period)?active.period:`Period ${active.period}`} (ends ${endDate.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})})`;
+    document.getElementById('time-left').textContent = fmtCountdown(active.end - nowMin, false);
+    highlight([active.period], isWed);
+  } else if(next){
+    document.getElementById('current-period').textContent = 'Passing Time / Break';
+    document.getElementById('time-left').textContent = `Next: Period ${next.period} starts in ${fmtCountdown(next.start - nowMin, false)}`;
+    highlight(null,false);
+  } else {
+    document.getElementById('current-period').textContent = 'Before/After school hours';
+    document.getElementById('time-left').textContent = '';
+    highlight(null,false);
+  }
+}
+
+/* msUpdater updates just the clock string including milliseconds and the fullscreen display when ms enabled */
+function msUpdaterTick(){
+  const now = new Date();
+  // only update the clock string (includes ms)
+  renderClock(now);
+
+  // if fullscreen open, update its countdown ms display too
+  if(fsOpen){
+    updateFullscreenNow(); // this uses settings.showMilliseconds to include ms
+  }
+}
+
+/* Start/stop intervals depending on settings.showMilliseconds */
+function startClockLoops(){
+  // clear any existing timers
+  if(mainTickInterval) { clearInterval(mainTickInterval); mainTickInterval = null; }
+  if(msInterval) { clearInterval(msInterval); msInterval = null; }
+  if(rafId){ cancelAnimationFrame(rafId); rafId = null; }
+
+  // coarse updater at 1000ms when ms off; when ms on keep coarse at 1000 as well (ms handled separately)
+  mainTickInterval = setInterval(coarseTick, 1000);
+  coarseTick(); // immediate
+
+  if(settings.showMilliseconds){
+    // Use setInterval(1) to update ms display and fullscreen quickly.
+    // Browsers clamp to ~4ms in inactive tabs; this still gives fast updates when visible.
+    msInterval = setInterval(msUpdaterTick, 1);
+    // Also call immediately to avoid any visible lag
+    msUpdaterTick();
+  }
+}
+
+/* Initialize clock loops */
+startClockLoops();
+
+/* ========================= Highlight and week rendering (unchanged) ========================= */
+function highlight(periods,isWed){
+  document.querySelectorAll('#schedule-table tbody td').forEach(td=>td.classList.remove('highlight'));
+  if(!periods) return;
+  const set = new Set(Array.isArray(periods)?periods:[periods]);
+  document.querySelectorAll('#schedule-table tbody tr').forEach(row=>{
+    const p = row.cells[0].textContent.trim();
+    if(set.has(p) || set.has('Period '+p)){ const col = isWed ? 2 : 1; if(row.cells[col]) row.cells[col].classList.add('highlight'); }
+  });
+}
+
+let currentWeekStart = (()=>{ const d=new Date(); const c=new Date(d.getFullYear(),d.getMonth(),d.getDate()); let day=c.getDay(); day=(day===0?7:day); c.setDate(c.getDate()-(day-1)); return c;})();
+let viewingWeekStart = new Date(currentWeekStart);
+function renderWeek(start){
+  const grid=document.getElementById('week-grid'); grid.innerHTML='';
+  const days = (weekType==='7'?7:5);
+  const end = addDays(start, days-1);
+  document.getElementById('week-range').textContent = `${start.toLocaleDateString(undefined,{month:'short',day:'numeric'})} – ${end.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})}`;
+  for(let i=0;i<days;i++){
+    const d=addDays(start,i);
+    const card=document.createElement('div'); card.className='day';
+    const head=document.createElement('div'); head.className='day-head';
+    head.innerHTML=`<span>${d.toLocaleDateString(undefined,{weekday:'short'})}</span><span class="date">${d.toLocaleDateString(undefined,{month:'short',day:'numeric'})}</span>`;
+    const evwrap=document.createElement('div'); evwrap.className='events';
+    const evs=eventsForDate(d);
+    if(evs.length===0){ const e=document.createElement('div'); e.className='ev small'; e.textContent='No events'; evwrap.appendChild(e); }
+    else{ const seen=new Set(); evs.forEach(ev=>{ const txt=ev.title.replace(/\s*\|\s*/g,' | '); if(!seen.has(txt)){ const e=document.createElement('div'); e.className='ev'; if(txt.toLowerCase().includes('no school')) e.style.background='rgba(255,87,34,0.12)'; e.textContent=txt; evwrap.appendChild(e); seen.add(txt);} }); }
+    card.appendChild(head); card.appendChild(evwrap); grid.appendChild(card);
+  }
+  document.getElementById('return-week').style.display = (ymd(start)===ymd(currentWeekStart))?'none':'inline-block';
+}
+document.getElementById('prev-week').addEventListener('click',()=>{ viewingWeekStart=addDays(viewingWeekStart,-7); renderWeek(viewingWeekStart); });
+document.getElementById('next-week').addEventListener('click',()=>{ viewingWeekStart=addDays(viewingWeekStart,7); renderWeek(viewingWeekStart); });
+document.getElementById('return-week').addEventListener('click',()=>{ viewingWeekStart=new Date(currentWeekStart); renderWeek(viewingWeekStart); });
+renderWeek(viewingWeekStart);
+
+/* ========================= Weather + hourly (unchanged except kept local helpers) ========================= */
+const wxIcon = document.getElementById('wx-emoji');
+const wxTemp = document.getElementById('wx-temp');
+const wxDesc = document.getElementById('wx-desc');
+const wxHighEl = document.getElementById('wx-high');
+const collapsedLabel = document.getElementById('collapsed-label');
+const hourlyPanel = document.getElementById('hourly-panel');
+const hourlyList = document.getElementById('hourly-list');
+const hourlyViewport = document.querySelector('.hourly-viewport');
+const arrowUp = document.getElementById('arrow-up');
+const arrowDown = document.getElementById('arrow-down');
+const weatherCard = document.getElementById('weather-card');
+
+let weatherData=null, hourlyItems=[], currentFirstIndex=0;
+const VISIBLE_COUNT = 6;
+
+function iconFor(code){
+  if(code===0) return '☀️'; if(code===1) return '🌤️'; if(code===2) return '⛅'; if(code===3) return '☁️';
+  if(code===45||code===48) return '🌫️'; if(code>=51&&code<=55) return '🌦️';
+  if(code>=61&&code<=65) return '🌧️'; if(code>=71&&code<=75) return '🌨️';
+  if(code>=80&&code<=82) return '🌧️'; if(code===95||code===96||code===99) return '⛈️';
+  return '🌈';
+}
+function descFor(code){
+  if(code===0) return 'Clear'; if(code===1) return 'Mostly Clear'; if(code===2) return 'Partly Cloudy';
+  if(code===3) return 'Cloudy'; if(code===45||code===48) return 'Fog';
+  if(code>=51&&code<=55) return 'Drizzle'; if(code>=61&&code<=65) return 'Rain';
+  if(code>=71&&code<=75) return 'Snow'; if(code>=80&&code<=82) return 'Showers';
+  if(code===95) return 'Thunder'; return 'Fair';
+}
+function parseLocal(isoNoZ){
+  const [datePart,timePart] = String(isoNoZ).split('T');
+  if(!datePart || !timePart) return new Date(isoNoZ);
+  const [y,m,d] = datePart.split('-').map(Number);
+  const [hh,mm] = timePart.split(':').map(Number);
+  return new Date(y, m-1, d, hh||0, mm||0, 0);
+}
+
+async function loadWeather(){
+  try{
+    const lat=45.278, lon=-92.985;
+    const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode&hourly=temperature_2m,weathercode&temperature_unit=fahrenheit&timezone=auto`;
+    const res=await fetch(url);
+    weatherData=await res.json();
+    if(weatherData && weatherData.current){
+      wxIcon.textContent = iconFor(weatherData.current.weathercode);
+      wxTemp.textContent = `${Math.round(weatherData.current.temperature_2m)}°F`;
+      wxDesc.textContent = descFor(weatherData.current.weathercode);
+      collapsedLabel.textContent = `${Math.round(weatherData.current.temperature_2m)}°F • ${descFor(weatherData.current.weathercode)}`;
+    } else {
+      collapsedLabel.textContent = 'Weather unavailable';
+    }
+    computeTodayHigh();
+    buildHourlyData();
+  }catch(e){
+    wxDesc.textContent='Weather unavailable';
+    collapsedLabel.textContent='Weather unavailable';
+    console.warn(e);
+    hourlyItems=[]; renderHourlyViewport(); updateArrows();
+  }
+}
+
+function computeTodayHigh(){
+  try{
+    if(!weatherData || !weatherData.hourly){ wxHighEl.textContent=''; return; }
+    const times=weatherData.hourly.time; const temps=weatherData.hourly.temperature_2m;
+    const now=new Date(); let maxTemp=-Infinity;
+    for(let i=0;i<times.length;i++){
+      const t=parseLocal(times[i]);
+      if(t.getFullYear()!==now.getFullYear()||t.getMonth()!==now.getMonth()||t.getDate()!==now.getDate()) continue;
+      if(t>=now && temps[i] > maxTemp) maxTemp = temps[i];
+    }
+    if(maxTemp === -Infinity && weatherData.current) maxTemp = weatherData.current.temperature_2m;
+    if(maxTemp !== -Infinity){ wxHighEl.textContent = `High: ${Math.round(maxTemp)}°F`; wxHighEl.setAttribute('aria-hidden','false'); }
+    else { wxHighEl.textContent = ''; wxHighEl.setAttribute('aria-hidden','true'); }
+  }catch(e){ wxHighEl.textContent=''; wxHighEl.setAttribute('aria-hidden','true'); }
+}
+
+/* buildHourlyData: include today's 23:00 if present */
+function buildHourlyData(){
+  if(!weatherData || !weatherData.hourly || !Array.isArray(weatherData.hourly.time)){ hourlyItems=[]; renderHourlyViewport(); updateArrows(); return; }
+  const times = weatherData.hourly.time;
+  const temps = weatherData.hourly.temperature_2m || [];
+  const codes = weatherData.hourly.weathercode || [];
+  const now = new Date();
+
+  let startIdx = -1;
+  for(let i=0;i<times.length;i++){
+    const t = parseLocal(times[i]);
+    if(t.getFullYear()===now.getFullYear() && t.getMonth()===now.getMonth() && t.getDate()===now.getDate()){
+      if(t.getHours() === now.getHours()){ startIdx = i; break; }
+    }
+  }
+  if(startIdx === -1){
+    startIdx = times.findIndex(tt=>{ const d=parseLocal(tt); return d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth() && d.getDate()===now.getDate() && d>=now; });
+  }
+  if(startIdx === -1) startIdx = 0;
+
+  let idx23 = -1;
+  for(let i=0;i<times.length;i++){
+    const t = parseLocal(times[i]);
+    if(t.getFullYear()===now.getFullYear() && t.getMonth()===now.getMonth() && t.getDate()===now.getDate() && t.getHours()===23){ idx23 = i; break; }
+  }
+
+  hourlyItems = [];
+  const endLimit = idx23 !== -1 ? idx23 : times.length - 1;
+  for(let i = startIdx; i <= endLimit && i < times.length; i++){
+    const t = parseLocal(times[i]);
+    if(t.getFullYear()!==now.getFullYear() || t.getMonth()!==now.getMonth() || t.getDate()!==now.getDate()) break;
+    const hr = t.getHours();
+    const ampm = hr>=12?'PM':'AM';
+    const dh = ((hr+11)%12)+1;
+    hourlyItems.push({ label:`${dh} ${ampm}`, icon:iconFor(codes[i]), temp:typeof temps[i]==='number'?Math.round(temps[i]):'—', hour:hr });
+  }
+
+  if(idx23 !== -1 && !hourlyItems.some(it=>it.hour===23)){
+    const t = parseLocal(times[idx23]);
+    hourlyItems.push({ label:'11 PM', icon:iconFor(codes[idx23]), temp:typeof temps[idx23]==='number'?Math.round(temps[idx23]):'—', hour:23 });
+  }
+
+  if(hourlyItems.length < VISIBLE_COUNT){
+    for(let k = startIdx - 1; k >= 0 && hourlyItems.length < VISIBLE_COUNT; k--){
+      const t = parseLocal(times[k]);
+      if(t.getFullYear()!==now.getFullYear() || t.getMonth()!==now.getMonth() || t.getDate()!==now.getDate()) break;
+      const hr = t.getHours(); const ampm = hr>=12?'PM':'AM'; const dh = ((hr+11)%12)+1;
+      hourlyItems.unshift({ label:`${dh} ${ampm}`, icon:iconFor(codes[k]), temp:typeof temps[k]==='number'?Math.round(temps[k]):'—', hour:hr });
+    }
+  }
+
+  hourlyItems = hourlyItems.filter((v,i,a)=>a.findIndex(x=>x.hour===v.hour)===i);
+  currentFirstIndex = 0;
+  renderHourlyViewport();
+  updateArrows();
+}
+
+function renderHourlyViewport(){ hourlyList.innerHTML = hourlyItems.map(it=>`<div class="hourly-item" role="listitem"><div class="time">${it.label}</div><div class="cond">${it.icon} ${it.temp}°F</div><div class="temp">${it.temp}°F</div></div>`).join(''); hourlyList.style.transform='translateY(0)'; currentFirstIndex = 0; updateArrows(); }
+function updateListTransform(){ const items = hourlyList.children; if(items.length===0) return; const gap = parseFloat(getComputedStyle(hourlyList).gap || 8); const single = items[0].getBoundingClientRect().height + gap; const y = single * currentFirstIndex; hourlyList.style.transform = `translateY(-${y}px)`; updateArrows(); }
+function updateArrows(){ arrowUp.classList.toggle('hidden', currentFirstIndex <= 0); arrowDown.classList.toggle('hidden', currentFirstIndex + VISIBLE_COUNT >= hourlyItems.length); arrowUp.setAttribute('aria-hidden', currentFirstIndex <= 0 ? 'true':'false'); arrowDown.setAttribute('aria-hidden', currentFirstIndex + VISIBLE_COUNT >= hourlyItems.length ? 'true':'false'); }
+arrowUp.addEventListener('click', (e)=>{ e.stopPropagation(); if(currentFirstIndex<=0) return; currentFirstIndex = Math.max(0, currentFirstIndex-1); updateListTransform(); });
+arrowDown.addEventListener('click', (e)=>{ e.stopPropagation(); if(currentFirstIndex + VISIBLE_COUNT >= hourlyItems.length) return; currentFirstIndex = Math.min(hourlyItems.length - VISIBLE_COUNT, currentFirstIndex+1); updateListTransform(); });
+hourlyViewport.addEventListener('wheel', (e)=>{ if(!hourlyItems.length) return; e.preventDefault(); const dir = Math.sign(e.deltaY); if(dir>0 && currentFirstIndex + VISIBLE_COUNT < hourlyItems.length){ currentFirstIndex++; updateListTransform(); } else if(dir<0 && currentFirstIndex>0){ currentFirstIndex--; updateListTransform(); } }, { passive:false });
+
+let dropdownOpen = false;
+weatherCard.addEventListener('click', (e)=>{ const ignore = e.target.closest('.slide-layer') || e.target.closest('.slide-btn'); if(ignore) return; dropdownOpen = !dropdownOpen; if(dropdownOpen){ weatherCard.classList.add('expanded'); hourlyPanel.style.display='block'; requestAnimationFrame(()=>{ hourlyPanel.setAttribute('aria-hidden','false'); hourlyPanel.style.maxHeight='420px'; hourlyPanel.style.opacity='1'; }); document.getElementById('weather-collapsed').style.opacity='0'; renderHourlyViewport(); } else { hourlyPanel.style.maxHeight='0'; hourlyPanel.style.opacity='0'; hourlyPanel.setAttribute('aria-hidden','true'); document.getElementById('weather-collapsed').style.opacity='1'; setTimeout(()=>{ if(!dropdownOpen){ hourlyPanel.style.display='none'; weatherCard.classList.remove('expanded'); } }, 260); } });
+document.addEventListener('click', (e)=>{ if(!e.target.closest('#weather-card') && dropdownOpen){ dropdownOpen=false; hourlyPanel.style.maxHeight='0'; hourlyPanel.style.opacity='0'; hourlyPanel.setAttribute('aria-hidden','true'); document.getElementById('weather-collapsed').style.opacity='1'; setTimeout(()=>{ hourlyPanel.style.display='none'; weatherCard.classList.remove('expanded'); }, 260); } });
+
+/* ========================= Fullscreen popup logic (shows ms when enabled) ========================= */
+const popup = document.getElementById('fullscreen-popup');
+const closeBtn = document.getElementById('fullscreen-close');
+const fsPeriod = document.getElementById('fs-period');
+const fsSub = document.getElementById('fs-sub');
+const fsCountdown = document.getElementById('fs-countdown');
+const fsMs = document.getElementById('fs-ms');
+
+let fsInterval = null;
+let fsOpen = false;
+
+function openFullscreenPopup(){
+  if(fsOpen) return;
+  fsOpen = true;
+  popup.setAttribute('aria-hidden','false');
+  popup.focus();
+  updateFullscreenNow();
+  // when ms enabled, fs updates are handled by msInterval; otherwise update at 250ms cadence
+  if(!settings.showMilliseconds){
+    fsInterval = setInterval(updateFullscreenNow, 250);
+  }
+  document.documentElement.style.overflow = 'hidden';
+}
+function closeFullscreenPopup(){
+  if(!fsOpen) return;
+  fsOpen = false;
+  popup.setAttribute('aria-hidden','true');
+  clearInterval(fsInterval); fsInterval = null;
+  document.documentElement.style.overflow = '';
+}
+function formatMins(mins){
+  const h = Math.floor(mins/60);
+  const m = Math.floor(mins%60);
+  const d = new Date(); d.setHours(h, m, 0);
+  return d.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+}
+function updateFullscreenNow(){
+  const now = new Date();
+  const day = now.getDay(); const isWeekend = (day===0||day===6); const isWed = (day===3);
+  const key = isWed ? 'wed' : 'monFri';
+  const items = buildNumericItems(key);
+  const nowMin = now.getHours()*60 + now.getMinutes() + now.getSeconds()/60 + now.getMilliseconds()/60000;
+  const active = items.find(it => nowMin >= it.start && nowMin < it.end) || null;
+  const next = items.find(it => nowMin < it.start) || null;
+
+  if(isWeekend){
+    fsPeriod.textContent = 'No School';
+    fsSub.textContent = 'Weekend';
+    fsCountdown.textContent = '';
+    fsMs.textContent = ''; fsMs.setAttribute('aria-hidden','true');
+    return;
+  }
+
+  if(active){
+    const label = /Lunch/i.test(active.period) ? active.period : `Period ${active.period}`;
+    fsPeriod.textContent = label;
+    const endH = Math.floor(active.end/60), endM = Math.round(active.end%60);
+    const endDate = new Date(); endDate.setHours(endH, endM, 0);
+    fsSub.textContent = `Ends ${endDate.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'})}`;
+    const remain = active.end - nowMin;
+    fsCountdown.textContent = fmtCountdown(remain, settings.showMilliseconds);
+    if(settings.showMilliseconds){
+      const totalMs = Math.max(0, Math.floor(remain * 60000));
+      fsMs.textContent = `${String(totalMs % 1000).padStart(3,'0')} ms`;
+      fsMs.setAttribute('aria-hidden','false');
+    } else {
+      fsMs.textContent = '';
+      fsMs.setAttribute('aria-hidden','true');
+    }
+    return;
+  }
+
+  if(next){
+    fsPeriod.textContent = 'Passing Time';
+    fsSub.textContent = `Next: Period ${next.period} (${formatMins(next.start)})`;
+    fsCountdown.textContent = fmtCountdown(next.start - nowMin, settings.showMilliseconds);
+    if(settings.showMilliseconds){
+      const totalMs = Math.max(0, Math.floor((next.start - nowMin) * 60000));
+      fsMs.textContent = `${String(totalMs % 1000).padStart(3,'0')} ms`;
+      fsMs.setAttribute('aria-hidden','false');
+    } else {
+      fsMs.textContent = '';
+      fsMs.setAttribute('aria-hidden','true');
+    }
+    return;
+  }
+
+  fsPeriod.textContent = 'Before/After School';
+  fsSub.textContent = '';
+  fsCountdown.textContent = '';
+  fsMs.textContent = '';
+  fsMs.setAttribute('aria-hidden','true');
+}
+
+closeBtn.addEventListener('click', closeFullscreenPopup);
+popup.addEventListener('click', (e)=>{ if(e.target === popup) closeFullscreenPopup(); });
+document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && fsOpen) closeFullscreenPopup(); });
+
+window.toggleFullscreenCountdown = function(){ if(fsOpen) closeFullscreenPopup(); else openFullscreenPopup(); };
+document.getElementById('btn-fullscreen').addEventListener('click', (e)=>{ e.stopPropagation(); window.toggleFullscreenCountdown(); });
+
+/* ========================= FAB, theme, settings, share/download/bookmark ========================= */
+const fab = document.getElementById('fab-main');
+const layer = document.getElementById('slide-layer');
+fab.addEventListener('click',(e)=>{ e.stopPropagation(); const open = layer.style.display!=='flex'; layer.style.display = open ? 'flex' : 'none'; fab.textContent = open ? '✕' : '+'; });
+document.addEventListener('click',(e)=>{ if(!e.target.closest('.fab-wrap') && layer.style.display==='flex'){ layer.style.display='none'; fab.textContent='+'; } });
+
+document.getElementById('btn-share').addEventListener('click', async ()=>{
+  const shareData={title:document.title,text:'Forest Lake Bell Schedule',url:location.href};
+  if(navigator.share){ try{ await navigator.share(shareData);}catch(e){} } else { try{ await navigator.clipboard.writeText(location.href); alert('Link copied'); }catch(e){ alert('Copy failed'); } }
+});
+document.getElementById('btn-download').addEventListener('click', ()=>{
+  const html='<!doctype html>\n'+document.documentElement.outerHTML;
+  const blob=new Blob([html],{type:'text/html'}); const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='forest-lake-bell-schedule.html'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+});
+document.getElementById('btn-bookmark').addEventListener('click', ()=>{
+  try{ if(window.external && window.external.AddFavorite){ window.external.AddFavorite(location.href, document.title); return; } }catch(e){}
+  alert('Press Ctrl+D (Windows) or Cmd+D (Mac) to bookmark.');
+});
+
+/* Theme map (10 themes) */
+const THEME_MAP = {
+  'dark-ink': {'--bg':'#0b0f13','--card':'#0f1417','--text':'#e6eef6','--muted':'#9fb0bf','--accent':'#ffb347','--accent-strong':'#ffd166','--fab':'#ff8a00'},
+  'dark-slate': {'--bg':'#0f1720','--card':'#162430','--text':'#e6eef6','--muted':'#9fb0bf','--accent':'#6ea8fe','--accent-strong':'#4d9aff','--fab':'#2b7df0'},
+  'dark-forest': {'--bg':'#07160f','--card':'#0e2b21','--text':'#e6f6ef','--muted':'#9bd1b2','--accent':'#4caf50','--accent-strong':'#7bd389','--fab':'#2e7d32'},
+  'dark-ocean': {'--bg':'#001e25','--card':'#01313a','--text':'#e6f7fa','--muted':'#99c7cf','--accent':'#02b3c8','--accent-strong':'#00e5ff','--fab':'#007f8f'},
+  'dark-plum': {'--bg':'#120717','--card':'#2a1222','--text':'#faedf9','--muted':'#d7badf','--accent':'#d081ff','--accent-strong':'#b86bff','--fab':'#7b2a7a'},
+  'light-clean': {'--bg':'#f4f7fb','--card':'#ffffff','--text':'#111827','--muted':'#6b7280','--accent':'#800000','--accent-strong':'#4CAF50','--fab':'#8b0000'},
+  'light-sand': {'--bg':'#fffaf6','--card':'#fffdf9','--text':'#1f2937','--muted':'#816b5a','--accent':'#d97706','--accent-strong':'#f59e0b','--fab':'#c2410c'},
+  'light-mint': {'--bg':'#f7fffb','--card':'#ffffff','--text':'#07251a','--muted':'#4b6c61','--accent':'#0ea5a4','--accent-strong':'#0891b2','--fab':'#00796b'},
+  'light-sky': {'--bg':'#f3fbff','--card':'#ffffff','--text':'#0b2545','--muted':'#5b6e80','--accent':'#0284c7','--accent-strong':'#0369a1','--fab':'#05668d'},
+  'light-lavender': {'--bg':'#fbf7ff','--card':'#ffffff','--text':'#2a1052','--muted':'#7b6a8a','--accent':'#7b1fa2','--accent-strong':'#9c27b0','--fab':'#6a1b9a'}
+};
+function applyTheme(name){
+  const theme = THEME_MAP[name];
+  if(!theme) return;
+  Object.keys(theme).forEach(k => document.documentElement.style.setProperty(k, theme[k]));
+  document.getElementById('theme-palette').style.display = 'none';
+  try{ localStorage.setItem('siteTheme', name); }catch(e){}
+}
+document.querySelectorAll('.theme-option').forEach(opt=>{
+  opt.addEventListener('click', ()=>{ const t = opt.dataset.theme; applyTheme(t); });
+});
+const saved = (()=>{ try{return localStorage.getItem('siteTheme'); }catch(e){return null;} })();
+if(saved && THEME_MAP[saved]) applyTheme(saved);
+
+/* theme/settings UI */
+const themePanel=document.getElementById('theme-palette');
+document.getElementById('btn-theme').addEventListener('click', ()=>{ themePanel.style.display='block'; });
+document.getElementById('theme-close').addEventListener('click', ()=>{ themePanel.style.display='none'; });
+
+const settingsModal = document.getElementById('settings-modal');
+document.getElementById('btn-settings').addEventListener('click', ()=>{ settingsModal.style.display='flex'; document.getElementById('time-format').value = settings.timeFormat; document.getElementById('show-seconds').checked = settings.showSeconds; document.getElementById('show-milliseconds').checked = settings.showMilliseconds; });
+document.getElementById('settings-close').addEventListener('click', ()=>{ settingsModal.style.display='none'; });
+document.getElementById('time-format').addEventListener('change', (e)=>{ settings.timeFormat = parseInt(e.target.value,10); startClockLoops(); });
+document.getElementById('show-seconds').addEventListener('change', (e)=>{ settings.showSeconds = !!e.target.checked; startClockLoops(); });
+document.getElementById('show-milliseconds').addEventListener('change', (e)=>{
+  settings.showMilliseconds = !!e.target.checked;
+  // when toggling ms on/off we start/stop the fast updater immediately to avoid lag
+  startClockLoops();
+  // if fullscreen is open and we switched ms mode, ensure fullscreen interval state matches
+  if(fsOpen){
+    clearInterval(fsInterval); fsInterval = null;
+    if(!settings.showMilliseconds) fsInterval = setInterval(updateFullscreenNow, 250);
+  }
+});
+
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ settingsModal.style.display='none'; themePanel.style.display='none'; if(layer.style.display==='flex'){ layer.style.display='none'; fab.textContent='+'; } if(fsOpen){ closeFullscreenPopup(); } } });
+
+/* ========================= Init weather polling ========================= */
+loadWeather();
+setInterval(loadWeather, 30000);
+</script>
+</body>
+</html>
