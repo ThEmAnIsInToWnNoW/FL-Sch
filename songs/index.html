@@ -1,81 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>🎧 DJ Song Requests</title>
 <style>
-body { background:#121212; color:white; font-family:Arial,sans-serif; text-align:center; margin:0; padding:0; }
-.container { max-width:800px; margin:auto; padding:20px; }
-input { padding:12px; width:70%; border:none; border-radius:8px; }
-button { padding:12px; background:#1DB954; border:none; color:white; border-radius:8px; margin:5px; cursor:pointer; }
+body {
+  margin:0; padding:0; font-family:Arial,sans-serif; background:#121212; color:white;
+}
+.container {
+  max-width:600px; margin:auto; padding:20px;
+}
+h1,h2 { text-align:center; }
+input {
+  padding:12px; width:70%; border-radius:8px; border:none; margin:5px 0;
+}
+button {
+  padding:12px; margin:5px; border:none; border-radius:8px; background:#1DB954; color:white; cursor:pointer;
+}
 button:hover { background:#18a64c; }
-.song { background:#1e1e1e; margin:10px auto; padding:10px; border-radius:8px; }
+.song {
+  background:#1e1e1e; margin:10px 0; padding:10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap;
+}
 .admin { border:2px solid orange; }
-iframe { border-radius:12px; margin-top:15px; }
+#suggestions, #requests { margin-top:10px; }
 </style>
 </head>
 <body>
 <div class="container">
 <h1>🎧 DJ Song Requests</h1>
 
-<h2>Current Playlist</h2>
-<iframe src="https://open.spotify.com/embed/playlist/0ODwqMSSEUeT0nFWQVwA3A" width="100%" height="380" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+<input id="songInput" placeholder="Type song or artist" autocomplete="off">
+<button onclick="suggest()">Suggest</button>
 
-<br><br>
-<input id="search" placeholder="Search songs or artists">
-<button onclick="search()">Search</button>
-
-<div id="results"></div>
+<h2>Suggestions</h2>
+<div id="suggestions"></div>
 
 <h2>Requested Songs</h2>
 <div id="requests"></div>
 
+<button onclick="downloadRequests()">Download Queue as TXT</button>
+</div>
+
 <script>
-let requests = [];
+// --- Requests storage ---
+let requests = JSON.parse(localStorage.getItem("requests")) || [];
 
-const WORKER_URL = "https://spotify-backend.spencerborowick.workers.dev/"; // Replace with your worker URL
-const ADMIN_PASSWORD = "djparty"; // Change if you want
-
-async function search(){
-  let q = document.getElementById("search").value;
-  if(!q) return;
-
-  let res = await fetch(`${WORKER_URL}/?q=${encodeURIComponent(q)}`);
-  let data = await res.json();
-
+// --- Render requests ---
+function renderRequests() {
+  // remove duplicates
+  let unique = [...new Set(requests)];
   let html = "";
-  data.forEach(track => {
-    html += `<div class="song"><b>${track.name}</b> - ${track.artists[0].name}<br>
-             <button onclick="requestSong('${track.uri}','${track.name}','${track.artists[0].name}')">Request</button></div>`;
-  });
-  document.getElementById("results").innerHTML = html;
-}
-
-function requestSong(uri,name,artist){
-  requests.push({uri,name,artist});
-  render();
-}
-
-async function approve(i){
-  let pass = prompt("Admin password");
-  if(pass !== ADMIN_PASSWORD){ alert("Wrong password"); return; }
-
-  let song = requests[i];
-  await fetch(`${WORKER_URL}/?add=${encodeURIComponent(song.uri)}`);
-  requests.splice(i,1);
-  render();
-}
-
-function render(){
-  let html = "";
-  requests.forEach((s,i)=>{
-    html += `<div class="song admin"><b>${s.name}</b> - ${s.artist}<br>
-             <button onclick="approve(${i})">Approve</button></div>`;
+  unique.forEach((r,i)=>{
+    html += `<div class="song admin">${r} <button onclick="removeRequest(${i})">Remove</button></div>`;
   });
   document.getElementById("requests").innerHTML = html;
+  requests = unique;
+  localStorage.setItem("requests", JSON.stringify(requests));
 }
+
+// --- Remove a request ---
+function removeRequest(index) {
+  requests.splice(index,1);
+  renderRequests();
+}
+
+// --- Download TXT ---
+function downloadRequests() {
+  let blob = new Blob([requests.join("\n")], {type:"text/plain"});
+  let url = URL.createObjectURL(blob);
+  let a = document.createElement("a");
+  a.href = url; a.download="song_requests.txt";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// --- Google Suggest API ---
+async function suggest() {
+  let query = document.getElementById("songInput").value.trim();
+  if(!query) return;
+  // Use JSONP Google suggest endpoint
+  let url = `https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}`;
+  let res = await fetch(url);
+  let data = await res.json(); // returns array: [query, [suggestions]]
+  let suggestions = data[1].slice(0,5); // top 5 suggestions
+  if(!suggestions.includes(query)) suggestions.unshift(query); // include original
+
+  let html = "";
+  suggestions.forEach(s => {
+    html += `<div class="song">${s} <button onclick="requestSong('${s}')">Request</button></div>`;
+  });
+  document.getElementById("suggestions").innerHTML = html;
+}
+
+// --- Request a song ---
+function requestSong(name) {
+  requests.push(name);
+  renderRequests();
+}
+
+// --- Initial render ---
+renderRequests();
 </script>
-</div>
 </body>
 </html>
