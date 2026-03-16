@@ -5,36 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>🎧 DJ Song Requests</title>
 <style>
-body {
-  margin:0; padding:0; font-family:Arial,sans-serif; background:#121212; color:white;
-}
-.container {
-  max-width:600px; margin:auto; padding:20px;
-}
+body { margin:0; padding:0; font-family:Arial,sans-serif; background:#121212; color:white; }
+.container { max-width:600px; margin:auto; padding:20px; }
 h1,h2 { text-align:center; }
-input {
-  padding:12px; width:70%; border-radius:8px; border:none; margin:5px 0;
-}
-button {
-  padding:12px; margin:5px; border:none; border-radius:8px; background:#1DB954; color:white; cursor:pointer;
-}
+input { padding:12px; width:70%; border-radius:8px; border:none; margin:5px 0; }
+button { padding:12px; margin:5px; border:none; border-radius:8px; background:#1DB954; color:white; cursor:pointer; }
 button:hover { background:#18a64c; }
-.song {
-  background:#1e1e1e; margin:10px 0; padding:10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;
-  flex-wrap:wrap;
-}
+.song { background:#1e1e1e; margin:10px 0; padding:10px; border-radius:8px; display:flex; justify-content:space-between; flex-wrap:wrap; }
 .admin { border:2px solid orange; }
-#suggestions, #requests { margin-top:10px; }
+.suggestion { cursor:pointer; padding:5px; border-radius:6px; }
+.suggestion:hover { background:#333; }
 </style>
 </head>
 <body>
 <div class="container">
 <h1>🎧 DJ Song Requests</h1>
-
 <input id="songInput" placeholder="Type song or artist" autocomplete="off">
-<button onclick="suggest()">Suggest</button>
-
-<h2>Suggestions</h2>
 <div id="suggestions"></div>
 
 <h2>Requested Songs</h2>
@@ -44,12 +30,33 @@ button:hover { background:#18a64c; }
 </div>
 
 <script>
-// --- Requests storage ---
+// --- Preloaded song/artist list for suggestions ---
+const songDB = [
+  "Blinding Lights - The Weeknd",
+  "Save Your Tears - The Weeknd",
+  "Levitating - Dua Lipa",
+  "Peaches - Justin Bieber",
+  "Stay - The Kid LAROI",
+  "Bad Habits - Ed Sheeran",
+  "Shivers - Ed Sheeran",
+  "Heat Waves - Glass Animals",
+  "Industry Baby - Lil Nas X",
+  "Montero - Lil Nas X",
+  "As It Was - Harry Styles",
+  "Watermelon Sugar - Harry Styles",
+  "Anti-Hero - Taylor Swift",
+  "Flowers - Miley Cyrus",
+  "Unholy - Sam Smith",
+  "Calm Down - Rema",
+  "Ghost - Justin Bieber",
+  "Attention - Charlie Puth"
+  // Add as many as you want
+];
+
 let requests = JSON.parse(localStorage.getItem("requests")) || [];
 
 // --- Render requests ---
 function renderRequests() {
-  // remove duplicates
   let unique = [...new Set(requests)];
   let html = "";
   unique.forEach((r,i)=>{
@@ -60,13 +67,13 @@ function renderRequests() {
   localStorage.setItem("requests", JSON.stringify(requests));
 }
 
-// --- Remove a request ---
+// --- Remove request ---
 function removeRequest(index) {
   requests.splice(index,1);
   renderRequests();
 }
 
-// --- Download TXT ---
+// --- Download requests ---
 function downloadRequests() {
   let blob = new Blob([requests.join("\n")], {type:"text/plain"});
   let url = URL.createObjectURL(blob);
@@ -76,28 +83,24 @@ function downloadRequests() {
   URL.revokeObjectURL(url);
 }
 
-// --- Google Suggest API ---
-async function suggest() {
-  let query = document.getElementById("songInput").value.trim();
-  if(!query) return;
-  // Use JSONP Google suggest endpoint
-  let url = `https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}`;
-  let res = await fetch(url);
-  let data = await res.json(); // returns array: [query, [suggestions]]
-  let suggestions = data[1].slice(0,5); // top 5 suggestions
-  if(!suggestions.includes(query)) suggestions.unshift(query); // include original
-
+// --- Suggest songs as user types ---
+document.getElementById("songInput").addEventListener("input", function(){
+  let query = this.value.toLowerCase();
+  if(!query){ document.getElementById("suggestions").innerHTML=""; return; }
+  let matches = songDB.filter(s => s.toLowerCase().includes(query)).slice(0,5);
   let html = "";
-  suggestions.forEach(s => {
-    html += `<div class="song">${s} <button onclick="requestSong('${s}')">Request</button></div>`;
+  matches.forEach(m => {
+    html += `<div class="suggestion" onclick="requestSong('${m}')">${m}</div>`;
   });
   document.getElementById("suggestions").innerHTML = html;
-}
+});
 
 // --- Request a song ---
 function requestSong(name) {
   requests.push(name);
   renderRequests();
+  document.getElementById("suggestions").innerHTML = "";
+  document.getElementById("songInput").value = "";
 }
 
 // --- Initial render ---
