@@ -38,8 +38,7 @@
         left: 50%;
         transform: translateX(-50%);
         z-index: 10;
-        width: 80%;
-        max-width: 750px;
+        width: min(80%, 1100px);
     }
     .midpoint-title {
         width: 100%;
@@ -75,8 +74,8 @@
     }
     .btn {
         display: block;
-        width: clamp(200px, 35vw, 310px);
-        height: clamp(32px, 4vw, 44px);
+        width: clamp(200px, 22vw, 480px);
+        height: clamp(32px, 2.8vw, 64px);
         text-decoration: none;
         cursor: pointer;
         transition: transform 0.08s, filter 0.08s;
@@ -87,26 +86,26 @@
     .btn:active { transform: translateY(2px); filter: brightness(0.9); }
     .group { display: flex; gap: 0.6vw; justify-content: center; flex-wrap: wrap; }
     .group .btn {
-        width: clamp(95px, 17vw, 150px);
-        height: clamp(32px, 4vw, 44px);
+        width: clamp(95px, 10.5vw, 232px);
+        height: clamp(32px, 2.8vw, 64px);
     }
 
     /* ── STATUS BOX ── */
     #status-box {
         position: fixed; bottom: 1.5vh; left: 1.5vw;
         background: rgba(0,0,0,0.75);
-        padding: clamp(8px, 1.5vh, 16px) clamp(10px, 1.8vw, 20px);
-        border: clamp(2px, 0.3vw, 4px) solid #333;
-        box-shadow: clamp(2px, 0.4vw, 5px) clamp(2px, 0.4vw, 5px) 0 #111;
-        font-size: clamp(8px, 1.2vw, 14px);
+        padding: clamp(8px, 1.2vh, 20px) clamp(10px, 1.2vw, 24px);
+        border: clamp(2px, 0.2vw, 5px) solid #333;
+        box-shadow: clamp(2px, 0.3vw, 6px) clamp(2px, 0.3vw, 6px) 0 #111;
+        font-size: clamp(8px, 0.85vw, 18px);
         z-index: 20;
-        min-width: clamp(140px, 20vw, 240px);
-        max-width: clamp(160px, 25vw, 280px);
+        min-width: clamp(140px, 14vw, 300px);
+        max-width: clamp(160px, 18vw, 360px);
         text-align: left;
     }
-    #status { color: #44ff44; font-weight: bold; display: block; margin-bottom: clamp(4px, 0.8vh, 10px); }
-    #players { margin: 0; padding: 0; list-style: none; font-size: clamp(7px, 1vw, 12px); }
-    #players li { margin: clamp(1px, 0.4vh, 4px) 0; word-break: break-all; }
+    #status { color: #44ff44; font-weight: bold; display: block; margin-bottom: clamp(4px, 0.6vh, 12px); }
+    #players { margin: 0; padding: 0; list-style: none; font-size: clamp(7px, 0.75vw, 16px); }
+    #players li { margin: clamp(1px, 0.3vh, 5px) 0; word-break: break-all; }
 
     /* ── LOADING ── */
     #loading-screen {
@@ -136,7 +135,7 @@
             font-size: clamp(7px, 2vw, 11px);
         }
         .menu {
-            top: 45%;
+            top: 58%;
             gap: 1.5vh;
         }
         .btn {
@@ -171,6 +170,13 @@
         .btn { width: 40vw; height: clamp(30px, 7vh, 44px); }
         .group .btn { width: 18vw; height: clamp(30px, 7vh, 44px); }
         #status-box { font-size: clamp(8px, 2vw, 12px); max-width: 40vw; }
+    }
+
+    /* ── 4K / LARGE DISPLAYS ── */
+    @media (min-width: 2000px) {
+        .header { width: 55%; }
+        .splash { font-size: clamp(16px, 1vw, 28px); }
+        .menu { top: 62%; gap: 2vh; }
     }
 
     /* ── TABLET ── */
