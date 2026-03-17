@@ -32,7 +32,7 @@
         }
         .header {
             position: absolute;
-            top: -2%;
+            top: -5%;
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
@@ -159,13 +159,14 @@
         const title = document.querySelector('.midpoint-title');
         const splash = document.getElementById('splash');
         const rect = title.getBoundingClientRect();
-        splash.style.left = '0px';
-        splash.style.top = '0px';
+        // Temporarily place off-screen to measure natural size
+        splash.style.left = '-9999px';
+        splash.style.top  = '-9999px';
         const sw = splash.offsetWidth;
         const sh = splash.offsetHeight;
-        // Overlap well inside the bottom-right corner of the title
-        splash.style.left = (rect.right - sw * 0.6) + 'px';
-        splash.style.top  = (rect.bottom - sh * 1.8) + 'px';
+        // Place so splash sits overlapping the bottom-right of the title
+        splash.style.left = (rect.right  - sw + 10) + 'px';
+        splash.style.top  = (rect.bottom - sh - 10) + 'px';
     }
     function waitAndPosition() {
         requestAnimationFrame(() => requestAnimationFrame(positionSplash));
@@ -178,7 +179,7 @@
     }
     window.addEventListener('resize', positionSplash);
     function updateStatus() {
-        fetch('https://api.mcsrvstat.us/2/midpointmc.net')
+        fetch('https://api.mcsrvstat.us/3/midpointmc.net')
             .then(res => res.json())
             .then(data => {
                 const status = document.getElementById('status');
@@ -187,8 +188,11 @@
                 if (data.online) {
                     status.textContent = 'Server is ONLINE!'; status.style.color = '#44ff44';
                     let names = [];
-                    if (data.players && data.players.list) names = names.concat(data.players.list);
-                    if (data.info && data.info.raw) names = names.concat(data.info.raw);
+                    if (data.players && data.players.list) {
+                        data.players.list.forEach(p => {
+                            names.push(typeof p === 'object' ? p.name : p);
+                        });
+                    }
                     names = [...new Set(names)];
                     if (names.length > 0) {
                         names.forEach(n => {
