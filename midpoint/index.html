@@ -107,6 +107,214 @@
     }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
+    @media(max-width: 480px){
+        .splash { font-size: 6vw; }
+        .btn { width: 80vw; height: 12vw; }
+        .group .btn { width: 38vw; height: 12vw; }
+        #status-box { font-size: 3vw; min-width: 65vw; max-width: 90vw; padding: 2vw; border-width: 1vw; }
+    }
+</style>
+</head>
+<body>
+<div id="loading-screen">
+    <div class="spinner"></div>
+    <div id="loading-text">Loading world...</div>
+</div>
+
+<div id="panorama"></div>
+<div class="vignette"></div>
+
+<div class="header">
+    <img src="minecraft_title.png?v=2" alt="MIDPOINT" class="midpoint-title">
+</div>
+
+<div class="splash" id="splash">More addictive than lemonade!</div>
+
+<div class="menu">
+    <a href="https://midpointmc.net/wiki/index.html" class="btn"><img src="wiki.png" alt="Wiki"></a>
+    <a href="https://midpointmc.net/gallery/index.html" class="btn"><img src="Gallery.png" alt="Gallery"></a>
+    <a href="https://midpointmc.net/Socials.html" class="btn"><img src="socials.png" alt="Socials"></a>
+    <a href="https://midpointmc.net/info.html" class="btn"><img src="info.png" alt="Info"></a>
+    <div class="group">
+        <a href="https://map.midpointmc.net/" class="btn"><img src="map.png" alt="Map"></a>
+        <a href="https://midpointmc.net/stats/" class="btn"><img src="stats.png" alt="Stats"></a>
+    </div>
+</div>
+
+<div id="status-box">
+    <span id="status">Checking server...</span>
+    <ul id="players"></ul>
+</div>
+
+<script>
+const loadingScreen = document.getElementById('loading-screen');
+function hideLoading() {
+    if (loadingScreen) {
+        loadingScreen.classList.add('hidden');
+        setTimeout(() => { loadingScreen.remove(); }, 700);
+    }
+}
+
+// Preload panorama image for mobile reliability
+const panoImg = new Image();
+panoImg.src = "output.jpg";
+panoImg.onload = () => {
+    try {
+        window.viewer = pannellum.viewer('panorama', {
+            type: "equirectangular",
+            panorama: "output.jpg",
+            autoLoad: true,
+            autoRotate: -4.5,
+            showControls: false,
+            showFullscreenCtrl: false,
+            showZoomCtrl: false,
+            hfov: window.innerWidth < 600 ? 180 : window.innerWidth < 900 ? 220 : 250,
+            pitch: -5,
+            yaw: 35
+        });
+        viewer.on('load', hideLoading);
+    } catch (e) {
+        document.body.style.background = "url('output.jpg') center/cover no-repeat";
+        hideLoading();
+    }
+};
+
+// Fallback: hide loading after 15s in case of issues
+setTimeout(hideLoading, 15000);
+
+// Splash randomizer
+const splashes = ["More addictive than lemonade!", "MIDPOINTMC AWAITS!", "PUNCH A TREE TO START!", "NEVER DIG STRAIGHT DOWN!", "BUILD EPIC OR GO HOME"];
+document.getElementById('splash').textContent = splashes[Math.floor(Math.random() * splashes.length)];
+
+// Splash positioning
+function positionSplash() {
+    const title = document.querySelector('.midpoint-title');
+    const splash = document.getElementById('splash');
+    const rect = title.getBoundingClientRect();
+    splash.style.left = '-9999px'; splash.style.top = '-9999px';
+    const sw = splash.offsetWidth; const sh = splash.offsetHeight;
+    splash.style.left = (rect.right - sw + 5) + 'px';
+    splash.style.top  = (rect.bottom - sh - 10) + 'px';
+}
+function waitAndPosition() { requestAnimationFrame(() => requestAnimationFrame(positionSplash)); }
+const titleImg = document.querySelector('.midpoint-title');
+if (titleImg.complete && titleImg.naturalWidth > 0) waitAndPosition();
+else titleImg.addEventListener('load', waitAndPosition);
+window.addEventListener('resize', positionSplash);
+
+// Server status update
+function updateStatus() {
+    fetch('https://api.mcsrvstat.us/3/midpointmc.net')
+        .then(res => res.json())
+        .then(data => {
+            const status = document.getElementById('status');
+            const playersList = document.getElementById('players');
+            playersList.innerHTML = '';
+            if (data.online) {
+                status.textContent = 'Server is ONLINE!'; status.style.color = '#44ff44';
+                let names = [];
+                if (data.players && data.players.list) data.players.list.forEach(p => { names.push(typeof p==='object'?p.name:p); });
+                names = [...new Set(names)];
+                if (names.length > 0) names.forEach(n => {
+                    const li = document.createElement('li'); li.textContent = n;
+                    if (n.startsWith(".")) { li.style.color="#55ffff"; li.style.fontStyle="italic"; }
+                    playersList.appendChild(li);
+                });
+                else playersList.innerHTML = '<li>No players online</li>';
+            } else {
+                status.textContent = 'Server is OFFLINE'; status.style.color = '#ff4444';
+                playersList.innerHTML = '<li>No players online</li>';
+            }
+        })
+        .catch(() => { document.getElementById('status').textContent='Status unavailable'; document.getElementById('status').style.color='#ffaa00'; });
+}
+updateStatus();
+setInterval(updateStatus, 30000);
+
+// Responsive panorama HFOV
+function adjustPanorama() {
+    if (!window.viewer) return;
+    let hfov = window.innerWidth < 600 ? 180 : window.innerWidth < 900 ? 220 : 250;
+    viewer.setHfov(hfov);
+}
+window.addEventListener('resize', adjustPanorama);
+window.addEventListener('orientationchange', adjustPanorama);
+adjustPanorama();
+</script>
+</body>
+</html>        transform: translateX(-50%);
+        z-index: 10;
+        width: 80%;
+        max-width: 750px;
+    }
+    .midpoint-title {
+        width: 100%;
+        height: auto;
+        display: block;
+        image-rendering: pixelated;
+        filter: drop-shadow(0 0.4vw 0 #000) drop-shadow(0 -0.4vw 0 #000) drop-shadow(0.4vw 0 0 #000) drop-shadow(-0.4vw 0 0 #000);
+    }
+    .splash {
+        position: fixed;
+        transform: rotate(-12deg);
+        transform-origin: top left;
+        color: #ffff55;
+        font-size: 4vw;
+        text-shadow: 0.3vw 0.3vw 0 #aa6600, 0.1vw 0.1vw 0 #000;
+        pointer-events: none;
+        white-space: nowrap;
+        z-index: 9998;
+    }
+    .menu {
+        position: absolute;
+        top: 65%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5vh;
+    }
+    .btn {
+        display: block;
+        width: 70vw;
+        max-width: 310px;
+        height: 10vw;
+        max-height: 40px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: transform 0.08s, filter 0.08s;
+        padding: 0; border: none; background: none;
+    }
+    .btn img { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+    .btn:hover { filter: brightness(1.2); transform: translateY(-0.3vw); }
+    .btn:active { transform: translateY(0.3vw); filter: brightness(0.9); }
+    .group { display: flex; gap: 2vw; justify-content: center; flex-wrap: wrap; }
+    .group .btn { width: 45vw; max-width: 150px; height: 8vw; max-height: 40px; }
+    #status-box {
+        position: fixed; bottom: 2vh; left: 2vw;
+        background: rgba(0,0,0,0.75); padding: 1.5vh 2vw;
+        border: 0.5vw solid #333; box-shadow: 0.5vw 0.5vw 0 #111;
+        font-size: 2vw; z-index: 20; min-width: 45vw; max-width: 80vw; text-align: left;
+    }
+    #status { color: #44ff44; font-weight: bold; display: block; margin-bottom: 0.5vh; }
+    #players { margin: 0; padding: 0; list-style: none; font-size: 1.5vw; }
+    #players li { margin: 0.3vh 0; word-break: break-all; }
+    #loading-screen {
+        position: fixed; inset: 0; background: #0a1f0a; z-index: 9999;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        color: #55ff55; font-family: 'Press Start 2P', cursive; font-size: 4vw;
+        text-shadow: 0.3vw 0.3vw 0 #000; transition: opacity 0.6s ease-out; pointer-events: all;
+    }
+    #loading-screen.hidden { opacity: 0; pointer-events: none; }
+    .spinner {
+        width: 12vw; max-width: 60px;
+        height: 12vw; max-height: 60px;
+        border: 1.2vw solid #55ff55; border-top: 1.2vw solid transparent;
+        border-radius: 50%; animation: spin 1.2s linear infinite; margin-bottom: 2vh;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
     /* Small screen tweaks */
     @media(max-width: 480px){
         .splash { font-size: 6vw; }
