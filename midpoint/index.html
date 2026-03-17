@@ -38,7 +38,7 @@
         left: 50%;
         transform: translateX(-50%);
         z-index: 10;
-        width: min(80%, 1100px);
+        width: min(60%, 750px);
     }
     .midpoint-title {
         width: 100%;
@@ -74,8 +74,8 @@
     }
     .btn {
         display: block;
-        width: clamp(200px, 22vw, 480px);
-        height: clamp(32px, 2.8vw, 64px);
+        width: clamp(200px, 18vw, 340px);
+        height: clamp(32px, 2.4vw, 50px);
         text-decoration: none;
         cursor: pointer;
         transition: transform 0.08s, filter 0.08s;
@@ -86,8 +86,8 @@
     .btn:active { transform: translateY(2px); filter: brightness(0.9); }
     .group { display: flex; gap: 0.6vw; justify-content: center; flex-wrap: wrap; }
     .group .btn {
-        width: clamp(95px, 10.5vw, 232px);
-        height: clamp(32px, 2.8vw, 64px);
+        width: clamp(95px, 8.7vw, 164px);
+        height: clamp(32px, 2.4vw, 50px);
     }
 
     /* ── STATUS BOX ── */
@@ -173,10 +173,11 @@
     }
 
     /* ── 4K / LARGE DISPLAYS ── */
-    @media (min-width: 2000px) {
-        .header { width: 55%; }
-        .splash { font-size: clamp(16px, 1vw, 28px); }
-        .menu { top: 62%; gap: 2vh; }
+    @media (min-width: 2560px) {
+        .header { width: min(55%, 1000px); }
+        .splash { font-size: clamp(14px, 0.9vw, 24px); }
+        .btn { width: clamp(260px, 16vw, 440px); height: clamp(40px, 2.2vw, 58px); }
+        .group .btn { width: clamp(125px, 7.8vw, 212px); height: clamp(40px, 2.2vw, 58px); }
     }
 
     /* ── TABLET ── */
