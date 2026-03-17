@@ -52,7 +52,7 @@
             transform: rotate(-12deg);
             transform-origin: top left;
             color: #ffff55;
-            font-size: clamp(9px, 1.1%, 15px);
+            font-size: 14px;
             text-shadow: 2px 2px 0 #aa6600, 1px 1px 0 #000;
             pointer-events: none;
             white-space: nowrap;
@@ -159,10 +159,14 @@
         const title = document.querySelector('.midpoint-title');
         const splash = document.getElementById('splash');
         const rect = title.getBoundingClientRect();
-        const splashRect = splash.getBoundingClientRect();
-        // Align splash's right edge to title's right edge, shifted up to overlap
-        splash.style.left = (rect.right - splashRect.width) + 'px';
-        splash.style.top  = (rect.bottom - splashRect.height - 30) + 'px';
+        // Reset position first so getBoundingClientRect gives real size
+        splash.style.left = '0px';
+        splash.style.top = '0px';
+        const sw = splash.offsetWidth;
+        const sh = splash.offsetHeight;
+        // Place bottom-right of splash at bottom-right of title, slightly inset
+        splash.style.left = (rect.right - sw - 5) + 'px';
+        splash.style.top  = (rect.bottom - sh - 5) + 'px';
     }
     function waitAndPosition() {
         requestAnimationFrame(() => requestAnimationFrame(positionSplash));
