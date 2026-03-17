@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>MIDPOINTMC</title>
 <link rel="icon" href="https://midpointmc.net/Midpoint.png" type="image/x-icon">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -125,32 +125,33 @@
     }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* ── MOBILE (portrait phones) ── */
-    @media (max-width: 600px) {
+    /* ── MOBILE (portrait phones, including high-res) ── */
+    @media (max-width: 768px) and (orientation: portrait),
+           (max-width: 600px) {
         .header {
-            width: 95%;
-            top: 2%;
+            width: 92%;
+            top: 1%;
         }
         .splash {
-            font-size: clamp(11px, 3.5vw, 15px);
+            font-size: clamp(7px, 2vw, 11px);
         }
         .menu {
-            top: 70%;
-            gap: 2.2vh;
+            top: 58%;
+            gap: 1.5vh;
         }
         .btn {
-            width: 86vw;
-            height: clamp(38px, 12vw, 54px);
+            width: 72vw;
+            height: clamp(36px, 10vw, 50px);
         }
         .group {
-            gap: 3vw;
+            gap: 2.5vw;
         }
         .group .btn {
-            width: 40vw;
-            height: clamp(38px, 12vw, 54px);
+            width: 34vw;
+            height: clamp(36px, 10vw, 50px);
         }
         #status-box {
-            font-size: clamp(9px, 3vw, 13px);
+            font-size: clamp(10px, 3vw, 14px);
             min-width: clamp(150px, 50vw, 230px);
             max-width: 64vw;
             padding: 2.5vw 3.5vw;
@@ -159,8 +160,17 @@
             left: 1.5vw;
         }
         #players {
-            font-size: clamp(8px, 2.6vw, 12px);
+            font-size: clamp(9px, 2.6vw, 13px);
         }
+    }
+
+    /* ── MOBILE LANDSCAPE ── */
+    @media (max-height: 500px) and (orientation: landscape) {
+        .header { width: 50%; top: 1%; left: 25%; transform: none; }
+        .menu { top: 55%; left: 55%; transform: translate(-50%, -50%); }
+        .btn { width: 40vw; height: clamp(30px, 7vh, 44px); }
+        .group .btn { width: 18vw; height: clamp(30px, 7vh, 44px); }
+        #status-box { font-size: clamp(8px, 2vw, 12px); max-width: 40vw; }
     }
 
     /* ── TABLET ── */
@@ -257,8 +267,10 @@ function positionSplash() {
     const rect = title.getBoundingClientRect();
     splash.style.left = '-9999px'; splash.style.top = '-9999px';
     const sw = splash.offsetWidth; const sh = splash.offsetHeight;
+    const isMobile = window.innerWidth <= 768;
+    const verticalOffset = isMobile ? 30 : 75;
     splash.style.left = (rect.right - sw + 5) + 'px';
-    splash.style.top  = (rect.bottom - sh - 75) + 'px';
+    splash.style.top  = (rect.bottom - sh - verticalOffset) + 'px';
 }
 function waitAndPosition() { requestAnimationFrame(() => requestAnimationFrame(positionSplash)); }
 const titleImg = document.querySelector('.midpoint-title');
