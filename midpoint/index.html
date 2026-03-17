@@ -30,6 +30,8 @@
         background: radial-gradient(circle at 50% 40%, transparent 20%, rgba(0,0,0,0.65) 100%);
         z-index: -1;
     }
+
+    /* ── HEADER / LOGO ── */
     .header {
         position: absolute;
         top: -7%;
@@ -46,17 +48,21 @@
         image-rendering: pixelated;
         filter: drop-shadow(0 0.4vw 0 #000) drop-shadow(0 -0.4vw 0 #000) drop-shadow(0.4vw 0 0 #000) drop-shadow(-0.4vw 0 0 #000);
     }
+
+    /* ── SPLASH ── */
     .splash {
         position: fixed;
         transform: rotate(-12deg);
         transform-origin: top left;
         color: #ffff55;
-        font-size: 1rem;
+        font-size: clamp(10px, 1.4vw, 18px);
         text-shadow: 2px 2px 0 #aa6600, 1px 1px 0 #000;
         pointer-events: none;
         white-space: nowrap;
         z-index: 9998;
     }
+
+    /* ── MENU ── */
     .menu {
         position: absolute;
         top: 65%;
@@ -69,20 +75,23 @@
     }
     .btn {
         display: block;
-        width: 70vw;
-        max-width: 310px;
-        height: 10vw;
-        max-height: 40px;
+        width: clamp(200px, 35vw, 310px);
+        height: clamp(32px, 4vw, 44px);
         text-decoration: none;
         cursor: pointer;
         transition: transform 0.08s, filter 0.08s;
         padding: 0; border: none; background: none;
     }
     .btn img { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
-    .btn:hover { filter: brightness(1.2); transform: translateY(-0.3vw); }
-    .btn:active { transform: translateY(0.3vw); filter: brightness(0.9); }
+    .btn:hover { filter: brightness(1.2); transform: translateY(-2px); }
+    .btn:active { transform: translateY(2px); filter: brightness(0.9); }
     .group { display: flex; gap: 0.6vw; justify-content: center; flex-wrap: wrap; }
-    .group .btn { width: 45vw; max-width: 150px; height: 8vw; max-height: 40px; }
+    .group .btn {
+        width: clamp(95px, 17vw, 150px);
+        height: clamp(32px, 4vw, 44px);
+    }
+
+    /* ── STATUS BOX ── */
     #status-box {
         position: fixed; bottom: 1.5vh; left: 1.5vw;
         background: rgba(0,0,0,0.75);
@@ -98,27 +107,81 @@
     #status { color: #44ff44; font-weight: bold; display: block; margin-bottom: clamp(4px, 0.8vh, 10px); }
     #players { margin: 0; padding: 0; list-style: none; font-size: clamp(7px, 1vw, 12px); }
     #players li { margin: clamp(1px, 0.4vh, 4px) 0; word-break: break-all; }
+
+    /* ── LOADING ── */
     #loading-screen {
         position: fixed; inset: 0; background: #0a1f0a; z-index: 9999;
         display: flex; flex-direction: column; align-items: center; justify-content: center;
-        color: #55ff55; font-family: 'Press Start 2P', cursive; font-size: 4vw;
+        color: #55ff55; font-family: 'Press Start 2P', cursive; font-size: clamp(14px, 4vw, 28px);
         text-shadow: 0.3vw 0.3vw 0 #000; transition: opacity 0.6s ease-out; pointer-events: all;
     }
     #loading-screen.hidden { opacity: 0; pointer-events: none; }
     .spinner {
-        width: 12vw; max-width: 60px;
-        height: 12vw; max-height: 60px;
-        border: 1.2vw solid #55ff55; border-top: 1.2vw solid transparent;
+        width: clamp(40px, 12vw, 60px);
+        height: clamp(40px, 12vw, 60px);
+        border: clamp(4px, 1.2vw, 6px) solid #55ff55;
+        border-top-color: transparent;
         border-radius: 50%; animation: spin 1.2s linear infinite; margin-bottom: 2vh;
     }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    @media(max-width: 480px){
-        .splash { font-size: 0.7rem; }
-        .btn { width: 80vw; height: 12vw; }
-        .group .btn { width: 38vw; height: 12vw; }
-        #status-box { font-size: clamp(8px, 2.5vw, 12px); min-width: clamp(130px, 40vw, 200px); max-width: 55vw; padding: 2vw 3vw; }
-        #players { font-size: clamp(7px, 2vw, 11px); }
+    /* ── MOBILE (portrait phones) ── */
+    @media (max-width: 600px) {
+        .header {
+            width: 95%;
+            top: 2%;
+        }
+        .splash {
+            font-size: clamp(11px, 3.5vw, 15px);
+        }
+        .menu {
+            top: 70%;
+            gap: 2.2vh;
+        }
+        .btn {
+            width: 86vw;
+            height: clamp(38px, 12vw, 54px);
+        }
+        .group {
+            gap: 3vw;
+        }
+        .group .btn {
+            width: 40vw;
+            height: clamp(38px, 12vw, 54px);
+        }
+        #status-box {
+            font-size: clamp(9px, 3vw, 13px);
+            min-width: clamp(150px, 50vw, 230px);
+            max-width: 64vw;
+            padding: 2.5vw 3.5vw;
+            border-width: 2px;
+            bottom: 1vh;
+            left: 1.5vw;
+        }
+        #players {
+            font-size: clamp(8px, 2.6vw, 12px);
+        }
+    }
+
+    /* ── TABLET ── */
+    @media (min-width: 601px) and (max-width: 900px) {
+        .header { width: 88%; top: 1%; }
+        .splash { font-size: clamp(10px, 2vw, 16px); }
+        .menu { top: 67%; gap: 1.8vh; }
+        .btn {
+            width: clamp(220px, 55vw, 300px);
+            height: clamp(34px, 7vw, 46px);
+        }
+        .group .btn {
+            width: clamp(100px, 26vw, 145px);
+            height: clamp(34px, 7vw, 46px);
+        }
+        #status-box {
+            font-size: clamp(8px, 1.6vw, 13px);
+            min-width: clamp(140px, 28vw, 210px);
+            max-width: clamp(160px, 33vw, 250px);
+        }
+        #players { font-size: clamp(7px, 1.4vw, 11px); }
     }
 </style>
 </head>
@@ -161,10 +224,8 @@ function hideLoading() {
     setTimeout(() => { if (loadingScreen.parentNode) loadingScreen.remove(); }, 700);
 }
 
-// Always hide loading after 4 seconds no matter what
 const hardTimeout = setTimeout(hideLoading, 4000);
 
-// Try to load panorama
 try {
     window.viewer = pannellum.viewer('panorama', {
         type: "equirectangular",
@@ -186,11 +247,10 @@ try {
     hideLoading();
 }
 
-// Splash randomizer
+// Splash
 const splashes = ["More addictive than lemonade!", "MIDPOINTMC AWAITS!", "PUNCH A TREE TO START!", "NEVER DIG STRAIGHT DOWN!", "BUILD EPIC OR GO HOME"];
 document.getElementById('splash').textContent = splashes[Math.floor(Math.random() * splashes.length)];
 
-// Splash positioning
 function positionSplash() {
     const title = document.querySelector('.midpoint-title');
     const splash = document.getElementById('splash');
@@ -206,7 +266,7 @@ if (titleImg.complete && titleImg.naturalWidth > 0) waitAndPosition();
 else titleImg.addEventListener('load', waitAndPosition);
 window.addEventListener('resize', positionSplash);
 
-// Server status update
+// Server status
 function updateStatus() {
     fetch('https://api.mcsrvstat.us/3/midpointmc.net')
         .then(res => res.json())
@@ -238,11 +298,11 @@ setInterval(updateStatus, 30000);
 // Responsive panorama HFOV
 function adjustPanorama() {
     if (!window.viewer) return;
-    let hfov = window.innerWidth < 600 ? 180 : window.innerWidth < 900 ? 220 : 250;
-    viewer.setHfov(hfov);
+    viewer.setHfov(window.innerWidth < 600 ? 180 : window.innerWidth < 900 ? 220 : 250);
 }
 window.addEventListener('resize', adjustPanorama);
 window.addEventListener('orientationchange', adjustPanorama);
 adjustPanorama();
 </script>
 </body>
+</html>
