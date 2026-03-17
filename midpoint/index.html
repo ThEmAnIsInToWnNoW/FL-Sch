@@ -136,7 +136,7 @@
             font-size: clamp(7px, 2vw, 11px);
         }
         .menu {
-            top: 45%;
+            top: 58%;
             gap: 1.5vh;
         }
         .btn {
@@ -228,32 +228,55 @@
 
 <script>
 const loadingScreen = document.getElementById('loading-screen');
+let loadingHidden = false;
 function hideLoading() {
-    if (!loadingScreen) return;
+    if (loadingHidden) return;
+    loadingHidden = true;
     loadingScreen.classList.add('hidden');
     setTimeout(() => { if (loadingScreen.parentNode) loadingScreen.remove(); }, 700);
 }
 
-const hardTimeout = setTimeout(hideLoading, 4000);
+// Check WebGL support first
+function hasWebGL() {
+    try {
+        const canvas = document.createElement('canvas');
+        return !!(canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
+    } catch(e) { return false; }
+}
 
-try {
-    window.viewer = pannellum.viewer('panorama', {
-        type: "equirectangular",
-        panorama: "output.jpg",
-        autoLoad: true,
-        autoRotate: -4.5,
-        showControls: false,
-        showFullscreenCtrl: false,
-        showZoomCtrl: false,
-        hfov: window.innerWidth < 600 ? 180 : window.innerWidth < 900 ? 220 : 250,
-        pitch: -5,
-        yaw: 35
-    });
-    window.viewer.on('load', () => { clearTimeout(hardTimeout); hideLoading(); });
-    window.viewer.on('error', () => { clearTimeout(hardTimeout); hideLoading(); });
-} catch(e) {
+// Hard fallback — always hide after 3 seconds no matter what
+const hardTimeout = setTimeout(hideLoading, 3000);
+
+if (hasWebGL()) {
+    try {
+        const isMobile = window.innerWidth <= 768;
+        const panoFile = isMobile ? 'output_mobile.jpg' : 'output.jpg';
+        window.viewer = pannellum.viewer('panorama', {
+            type: "equirectangular",
+            panorama: panoFile,
+            autoLoad: true,
+            autoRotate: -4.5,
+            showControls: false,
+            showFullscreenCtrl: false,
+            showZoomCtrl: false,
+            hfov: window.innerWidth < 600 ? 180 : window.innerWidth < 900 ? 220 : 250,
+            pitch: -5,
+            yaw: 35
+        });
+        window.viewer.on('load', () => { clearTimeout(hardTimeout); hideLoading(); });
+        window.viewer.on('error', () => { clearTimeout(hardTimeout); hideLoading(); });
+    } catch(e) {
+        document.getElementById('panorama').style.display = 'none';
+        document.body.style.background = "url('output_mobile.jpg') center/cover no-repeat fixed";
+        clearTimeout(hardTimeout);
+        hideLoading();
+    }
+} else {
+    // No WebGL (Brave shields, iOS restrictions) — use plain image background
+    document.getElementById('panorama').style.display = 'none';
+    const isMobile = window.innerWidth <= 768;
+    document.body.style.background = `url('${isMobile ? 'output_mobile.jpg' : 'output.jpg'}') center/cover no-repeat fixed`;
     clearTimeout(hardTimeout);
-    document.body.style.background = "url('output.jpg') center/cover no-repeat";
     hideLoading();
 }
 
@@ -289,10 +312,21 @@ function updateStatus() {
             if (data.online) {
                 status.textContent = 'Server is ONLINE!'; status.style.color = '#44ff44';
                 let names = [];
-                if (data.players && data.players.list) data.players.list.forEach(p => { names.push(typeof p==='object'?p.name:p); });
+
+                // Java players
+                if (data.players && data.players.list)
+                    data.players.list.forEach(p => names.push(typeof p === 'object' ? p.name : p));
+
+                // Bedrock/Geyser players often show in info.clean or info.raw
+                if (data.info && data.info.clean)
+                    data.info.clean.forEach(line => { if (line.trim()) names.push(line.trim()); });
+                else if (data.info && data.info.raw)
+                    data.info.raw.forEach(line => { if (line.trim()) names.push(line.trim()); });
+
                 names = [...new Set(names)];
                 if (names.length > 0) names.forEach(n => {
                     const li = document.createElement('li'); li.textContent = n;
+                    // Geyser bedrock players typically start with a dot
                     if (n.startsWith(".")) { li.style.color="#55ffff"; li.style.fontStyle="italic"; }
                     playersList.appendChild(li);
                 });
