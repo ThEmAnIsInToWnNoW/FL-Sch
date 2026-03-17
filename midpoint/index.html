@@ -36,11 +36,12 @@
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
-            width: 67.5vw;
-            max-width: 750px;
+            width: min(67.5%, 750px);
+            max-width: 100%;
         }
         .midpoint-title {
             width: 100%;
+            max-width: 100%;
             height: auto;
             display: block;
             image-rendering: pixelated;
@@ -51,7 +52,7 @@
             transform: rotate(-12deg);
             transform-origin: top left;
             color: #ffff55;
-            font-size: clamp(9px, 1.1vw, 15px);
+            font-size: clamp(9px, 1.1%, 15px);
             text-shadow: 2px 2px 0 #aa6600, 1px 1px 0 #000;
             pointer-events: none;
             white-space: nowrap;
@@ -59,7 +60,7 @@
         }
         .menu {
             position: absolute;
-            top: 60%;
+            top: 68%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 10;
@@ -161,7 +162,7 @@
         const splashRect = splash.getBoundingClientRect();
         // Align splash's right edge to title's right edge, shifted up to overlap
         splash.style.left = (rect.right - splashRect.width) + 'px';
-        splash.style.top  = (rect.bottom - splashRect.height - 25) + 'px';
+        splash.style.top  = (rect.bottom - splashRect.height - 30) + 'px';
     }
     function waitAndPosition() {
         requestAnimationFrame(() => requestAnimationFrame(positionSplash));
