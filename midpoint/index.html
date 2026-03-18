@@ -38,7 +38,7 @@
         left: 50%;
         transform: translateX(-50%);
         z-index: 10;
-        width: min(60%, 750px);
+        width: clamp(280px, 55vw, 750px);
     }
     .midpoint-title {
         width: 100%;
@@ -74,8 +74,8 @@
     }
     .btn {
         display: block;
-        width: clamp(200px, 18vw, 340px);
-        height: clamp(32px, 2.4vw, 50px);
+        width: clamp(200px, 20vw, 360px);
+        height: clamp(32px, 2.8vw, 54px);
         text-decoration: none;
         cursor: pointer;
         transition: transform 0.08s, filter 0.08s;
@@ -84,10 +84,10 @@
     .btn img { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
     .btn:hover { filter: brightness(1.2); transform: translateY(-2px); }
     .btn:active { transform: translateY(2px); filter: brightness(0.9); }
-    .group { display: flex; gap: 0.6vw; justify-content: center; flex-wrap: wrap; }
+    .group { display: flex; gap: 1vw; justify-content: center; flex-wrap: wrap; }
     .group .btn {
-        width: clamp(95px, 8.7vw, 164px);
-        height: clamp(32px, 2.4vw, 50px);
+        width: clamp(95px, 9.7vw, 175px);
+        height: clamp(32px, 2.8vw, 54px);
     }
 
     /* ── STATUS BOX ── */
@@ -135,7 +135,7 @@
             font-size: clamp(7px, 2vw, 11px);
         }
         .menu {
-            top: 45%;
+            top: 58%;
             gap: 1.5vh;
         }
         .btn {
@@ -174,10 +174,13 @@
 
     /* ── 4K / LARGE DISPLAYS ── */
     @media (min-width: 2560px) {
-        .header { width: min(55%, 1000px); }
-        .splash { font-size: clamp(14px, 0.9vw, 24px); }
-        .btn { width: clamp(260px, 16vw, 440px); height: clamp(40px, 2.2vw, 58px); }
-        .group .btn { width: clamp(125px, 7.8vw, 212px); height: clamp(40px, 2.2vw, 58px); }
+        .header { width: min(55%, 1200px); }
+        .splash { font-size: clamp(14px, 0.9vw, 28px); }
+        .menu { top: 62%; gap: 2.5vh; }
+        .btn { width: clamp(300px, 18vw, 700px); height: clamp(48px, 2.8vw, 110px); }
+        .group .btn { width: clamp(145px, 8.7vw, 340px); height: clamp(48px, 2.8vw, 110px); }
+        #status-box { font-size: clamp(12px, 0.85vw, 24px); min-width: clamp(200px, 14vw, 420px); max-width: clamp(240px, 18vw, 500px); }
+        #players { font-size: clamp(10px, 0.75vw, 20px); }
     }
 
     /* ── TABLET ── */
