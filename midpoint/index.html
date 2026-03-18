@@ -222,7 +222,7 @@ if (hasWebGL()) {
             autoLoad: true, autoRotate: -4.5,
             showControls: false, showFullscreenCtrl: false, showZoomCtrl: false,
             hfov: window.innerWidth < 600 ? 180 : window.innerWidth < 900 ? 220 : 250,
-            pitch: -5, yaw: 35
+            pitch: 5, yaw: 35
         });
         window.viewer.on('load', () => { clearTimeout(hardTimeout); hideLoading(); });
         window.viewer.on('error', () => { clearTimeout(hardTimeout); hideLoading(); });
