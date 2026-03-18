@@ -10,25 +10,23 @@
 <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
         font-family: 'Press Start 2P', cursive;
         color: #fff;
-        overflow-x: hidden;
-        overflow-y: auto;
+        background: #0a1f0a;
         min-height: 100vh;
+        overflow: hidden;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        text-align: center;
-        background: #0a1f0a;
-        image-rendering: pixelated;
-        padding: 2vh 0;
     }
+
     #panorama {
         position: fixed; top: 0; left: 0;
         width: 100%; height: 100%;
-        z-index: -2; image-rendering: pixelated;
+        z-index: -2;
     }
     .vignette {
         position: fixed; inset: 0; pointer-events: none;
@@ -36,7 +34,7 @@
         z-index: -1;
     }
 
-    /* ── MAIN LAYOUT: body is the flex container ── */
+    /* ── LAYOUT: everything scales with vw ── */
     .page-wrapper {
         display: flex;
         flex-direction: column;
@@ -45,47 +43,50 @@
         gap: 2vh;
         z-index: 10;
         width: 100%;
+        padding: 2vh 0;
     }
 
-    /* ── HEADER / LOGO ── */
     .header {
-        width: clamp(240px, 42vw, 700px);
-        flex-shrink: 0;
         position: relative;
+        width: 45vw;
+        min-width: 200px;
+        max-width: 750px;
     }
     .midpoint-title {
         width: 100%;
         height: auto;
         display: block;
         image-rendering: pixelated;
-        filter: drop-shadow(0 0.4vw 0 #000) drop-shadow(0 -0.4vw 0 #000) drop-shadow(0.4vw 0 0 #000) drop-shadow(-0.4vw 0 0 #000);
+        filter: drop-shadow(0 4px 0 #000) drop-shadow(0 -4px 0 #000) drop-shadow(4px 0 0 #000) drop-shadow(-4px 0 0 #000);
     }
 
-    /* ── SPLASH ── */
     .splash {
         position: fixed;
         transform: rotate(-12deg);
         transform-origin: top left;
         color: #ffff55;
-        font-size: clamp(9px, 1.1vw, 16px);
+        font-size: 1.1vw;
         text-shadow: 2px 2px 0 #aa6600, 1px 1px 0 #000;
         pointer-events: none;
         white-space: nowrap;
         z-index: 9998;
     }
 
-    /* ── MENU ── */
     .menu {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: clamp(4px, 1.2vh, 12px);
-        flex-shrink: 0;
+        gap: 1vh;
+        width: 100%;
     }
     .btn {
         display: block;
-        width: clamp(180px, 20vw, 340px);
-        height: clamp(28px, 2.6vw, 48px);
+        width: 22vw;
+        min-width: 160px;
+        max-width: 340px;
+        height: 3vw;
+        min-height: 28px;
+        max-height: 50px;
         text-decoration: none;
         cursor: pointer;
         transition: transform 0.08s, filter 0.08s;
@@ -94,91 +95,70 @@
     .btn img { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
     .btn:hover { filter: brightness(1.2); transform: translateY(-2px); }
     .btn:active { transform: translateY(2px); filter: brightness(0.9); }
-    .group { display: flex; gap: 1vw; justify-content: center; flex-wrap: wrap; }
+    .group { display: flex; gap: 1vw; justify-content: center; }
     .group .btn {
-        width: clamp(86px, 9.7vw, 164px);
-        height: clamp(28px, 2.6vw, 48px);
+        width: 10.5vw;
+        min-width: 76px;
+        max-width: 164px;
+        height: 3vw;
+        min-height: 28px;
+        max-height: 50px;
     }
 
-    /* ── STATUS BOX ── */
     #status-box {
         position: fixed; bottom: 1.5vh; left: 1.5vw;
         background: rgba(0,0,0,0.75);
-        padding: clamp(8px, 1.2vh, 20px) clamp(10px, 1.2vw, 24px);
-        border: clamp(2px, 0.2vw, 5px) solid #333;
-        box-shadow: clamp(2px, 0.3vw, 6px) clamp(2px, 0.3vw, 6px) 0 #111;
-        font-size: clamp(8px, 0.85vw, 18px);
+        padding: 1vh 1vw;
+        border: 2px solid #333;
+        box-shadow: 4px 4px 0 #111;
+        font-size: 0.8vw;
         z-index: 20;
-        min-width: clamp(140px, 14vw, 300px);
-        max-width: clamp(160px, 18vw, 360px);
+        min-width: 12vw;
+        max-width: 20vw;
         text-align: left;
     }
-    #status { color: #44ff44; font-weight: bold; display: block; margin-bottom: clamp(4px, 0.6vh, 12px); }
-    #players { margin: 0; padding: 0; list-style: none; font-size: clamp(7px, 0.75vw, 16px); }
-    #players li { margin: clamp(1px, 0.3vh, 5px) 0; word-break: break-all; }
+    #status { color: #44ff44; font-weight: bold; display: block; margin-bottom: 0.5vh; }
+    #players { margin: 0; padding: 0; list-style: none; font-size: 0.7vw; }
+    #players li { margin: 0.3vh 0; word-break: break-all; }
 
-    /* ── LOADING ── */
     #loading-screen {
         position: fixed; inset: 0; background: #0a1f0a; z-index: 9999;
         display: flex; flex-direction: column; align-items: center; justify-content: center;
-        color: #55ff55; font-family: 'Press Start 2P', cursive; font-size: clamp(14px, 4vw, 28px);
-        text-shadow: 0.3vw 0.3vw 0 #000; transition: opacity 0.6s ease-out; pointer-events: all;
+        color: #55ff55; font-family: 'Press Start 2P', cursive;
+        font-size: 2vw; text-shadow: 2px 2px 0 #000;
+        transition: opacity 0.6s ease-out;
     }
     #loading-screen.hidden { opacity: 0; pointer-events: none; }
     .spinner {
-        width: clamp(40px, 12vw, 60px);
-        height: clamp(40px, 12vw, 60px);
-        border: clamp(4px, 1.2vw, 6px) solid #55ff55;
-        border-top-color: transparent;
+        width: 6vw; height: 6vw; max-width: 60px; max-height: 60px;
+        border: 0.6vw solid #55ff55; border-top-color: transparent;
         border-radius: 50%; animation: spin 1.2s linear infinite; margin-bottom: 2vh;
     }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── MOBILE (portrait phones, including high-res) ── */
-    @media (max-width: 768px) and (orientation: portrait),
-           (max-width: 600px) {
-        .page-wrapper { gap: 1.5vh; }
-        .header { width: clamp(220px, 88vw, 480px); }
-        .splash { font-size: clamp(7px, 2vw, 11px); }
-        .btn { width: clamp(200px, 80vw, 380px); height: clamp(36px, 10vw, 52px); }
-        .group { gap: 3vw; }
-        .group .btn { width: clamp(95px, 38vw, 183px); height: clamp(36px, 10vw, 52px); }
-        #status-box { font-size: clamp(10px, 3vw, 14px); min-width: clamp(150px, 50vw, 230px); max-width: 64vw; padding: 2.5vw 3.5vw; border-width: 2px; bottom: 1vh; left: 1.5vw; }
-        #players { font-size: clamp(9px, 2.6vw, 13px); }
+    /* phones only - actual small screens */
+    @media (max-width: 500px) {
+        .header { width: 88vw; min-width: unset; max-width: unset; }
+        .btn { width: 80vw; min-width: unset; max-width: unset; height: 12vw; min-height: unset; max-height: unset; }
+        .group .btn { width: 38vw; min-width: unset; max-width: unset; height: 12vw; }
+        .splash { font-size: 3vw; }
+        #status-box { font-size: 3vw; min-width: 48vw; max-width: 65vw; padding: 2vw 3vw; }
+        #players { font-size: 2.6vw; }
     }
 
-    /* ── MOBILE LANDSCAPE ── */
-    @media (max-height: 500px) and (orientation: landscape) {
-        .page-wrapper { flex-direction: row; gap: 3vw; align-items: center; }
-        .header { width: clamp(180px, 30vw, 320px); }
-        .btn { width: clamp(140px, 20vw, 240px); height: clamp(26px, 5vh, 38px); }
-        .group .btn { width: clamp(66px, 9.5vw, 115px); height: clamp(26px, 5vh, 38px); }
-        #status-box { font-size: clamp(8px, 2vw, 12px); max-width: 40vw; }
-    }
-
-    /* ── TABLET ── */
-    @media (min-width: 601px) and (max-width: 900px) {
-        .header { width: clamp(220px, 60vw, 520px); }
-        .splash { font-size: clamp(10px, 2vw, 16px); }
-        .btn { width: clamp(200px, 52vw, 300px); height: clamp(34px, 7vw, 46px); }
-        .group .btn { width: clamp(96px, 25vw, 145px); height: clamp(34px, 7vw, 46px); }
-        #status-box { font-size: clamp(8px, 1.6vw, 13px); min-width: clamp(140px, 28vw, 210px); max-width: clamp(160px, 33vw, 250px); }
-        #players { font-size: clamp(7px, 1.4vw, 11px); }
-    }
-
-    /* ── 4K / LARGE DISPLAYS ── */
+    /* 4K */
     @media (min-width: 2560px) {
-        .header { width: clamp(500px, 38vw, 1200px); }
-        .splash { font-size: clamp(14px, 0.9vw, 28px); }
-        .page-wrapper { gap: 3vh; }
-        .btn { width: clamp(300px, 18vw, 700px); height: clamp(48px, 2.8vw, 110px); }
-        .group .btn { width: clamp(145px, 8.7vw, 340px); height: clamp(48px, 2.8vw, 110px); }
-        #status-box { font-size: clamp(12px, 0.85vw, 24px); min-width: clamp(200px, 14vw, 420px); max-width: clamp(240px, 18vw, 500px); }
-        #players { font-size: clamp(10px, 0.75vw, 20px); }
+        .header { width: 36vw; max-width: 1100px; }
+        .btn { width: 18vw; max-width: 650px; height: 2.6vw; max-height: 100px; }
+        .group .btn { width: 8.6vw; max-width: 310px; height: 2.6vw; max-height: 100px; }
+        .splash { font-size: 0.85vw; }
+        #status-box { font-size: 0.75vw; min-width: 13vw; max-width: 18vw; }
+        #players { font-size: 0.65vw; }
     }
 </style>
 </head>
 <body>
+
 <div id="loading-screen">
     <div class="spinner"></div>
     <div id="loading-text">Loading world...</div>
@@ -220,48 +200,37 @@ function hideLoading() {
     setTimeout(() => { if (loadingScreen.parentNode) loadingScreen.remove(); }, 700);
 }
 
-// Check WebGL support first
 function hasWebGL() {
     try {
-        const canvas = document.createElement('canvas');
-        return !!(canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
+        const c = document.createElement('canvas');
+        return !!(c.getContext('webgl') || c.getContext('experimental-webgl'));
     } catch(e) { return false; }
 }
 
-// Hard fallback — always hide after 3 seconds no matter what
 const hardTimeout = setTimeout(hideLoading, 3000);
 
 if (hasWebGL()) {
     try {
-        const isMobile = window.innerWidth <= 768;
-        const panoFile = isMobile ? 'output_mobile.jpg' : 'output.jpg';
+        const isMobile = window.innerWidth <= 500;
         window.viewer = pannellum.viewer('panorama', {
             type: "equirectangular",
-            panorama: panoFile,
-            autoLoad: true,
-            autoRotate: -4.5,
-            showControls: false,
-            showFullscreenCtrl: false,
-            showZoomCtrl: false,
+            panorama: isMobile ? 'output_mobile.jpg' : 'output.jpg',
+            autoLoad: true, autoRotate: -4.5,
+            showControls: false, showFullscreenCtrl: false, showZoomCtrl: false,
             hfov: window.innerWidth < 600 ? 180 : window.innerWidth < 900 ? 220 : 250,
-            pitch: -5,
-            yaw: 35
+            pitch: -5, yaw: 35
         });
         window.viewer.on('load', () => { clearTimeout(hardTimeout); hideLoading(); });
         window.viewer.on('error', () => { clearTimeout(hardTimeout); hideLoading(); });
     } catch(e) {
         document.getElementById('panorama').style.display = 'none';
-        document.body.style.background = "url('output_mobile.jpg') center/cover no-repeat fixed";
-        clearTimeout(hardTimeout);
-        hideLoading();
+        document.body.style.background = "url('output.jpg') center/cover no-repeat fixed";
+        clearTimeout(hardTimeout); hideLoading();
     }
 } else {
-    // No WebGL (Brave shields, iOS restrictions) — use plain image background
     document.getElementById('panorama').style.display = 'none';
-    const isMobile = window.innerWidth <= 768;
-    document.body.style.background = `url('${isMobile ? 'output_mobile.jpg' : 'output.jpg'}') center/cover no-repeat fixed`;
-    clearTimeout(hardTimeout);
-    hideLoading();
+    document.body.style.background = "url('output.jpg') center/cover no-repeat fixed";
+    clearTimeout(hardTimeout); hideLoading();
 }
 
 // Splash
@@ -274,10 +243,8 @@ function positionSplash() {
     const rect = title.getBoundingClientRect();
     splash.style.left = '-9999px'; splash.style.top = '-9999px';
     const sw = splash.offsetWidth; const sh = splash.offsetHeight;
-    const isMobile = window.innerWidth <= 768;
-    const verticalOffset = isMobile ? 30 : 75;
     splash.style.left = (rect.right - sw + 5) + 'px';
-    splash.style.top  = (rect.bottom - sh - verticalOffset) + 'px';
+    splash.style.top  = (rect.bottom - sh - (rect.height * 0.25)) + 'px';
 }
 function waitAndPosition() { requestAnimationFrame(() => requestAnimationFrame(positionSplash)); }
 const titleImg = document.querySelector('.midpoint-title');
@@ -296,22 +263,16 @@ function updateStatus() {
             if (data.online) {
                 status.textContent = 'Server is ONLINE!'; status.style.color = '#44ff44';
                 let names = [];
-
-                // Java players
                 if (data.players && data.players.list)
                     data.players.list.forEach(p => names.push(typeof p === 'object' ? p.name : p));
-
-                // Bedrock/Geyser players often show in info.clean or info.raw
                 if (data.info && data.info.clean)
-                    data.info.clean.forEach(line => { if (line.trim()) names.push(line.trim()); });
+                    data.info.clean.forEach(l => { if (l.trim()) names.push(l.trim()); });
                 else if (data.info && data.info.raw)
-                    data.info.raw.forEach(line => { if (line.trim()) names.push(line.trim()); });
-
+                    data.info.raw.forEach(l => { if (l.trim()) names.push(l.trim()); });
                 names = [...new Set(names)];
                 if (names.length > 0) names.forEach(n => {
                     const li = document.createElement('li'); li.textContent = n;
-                    // Geyser bedrock players typically start with a dot
-                    if (n.startsWith(".")) { li.style.color="#55ffff"; li.style.fontStyle="italic"; }
+                    if (n.startsWith('.')) { li.style.color = '#55ffff'; li.style.fontStyle = 'italic'; }
                     playersList.appendChild(li);
                 });
                 else playersList.innerHTML = '<li>No players online</li>';
@@ -320,19 +281,17 @@ function updateStatus() {
                 playersList.innerHTML = '<li>No players online</li>';
             }
         })
-        .catch(() => { document.getElementById('status').textContent='Status unavailable'; document.getElementById('status').style.color='#ffaa00'; });
+        .catch(() => { document.getElementById('status').textContent = 'Status unavailable'; document.getElementById('status').style.color = '#ffaa00'; });
 }
 updateStatus();
 setInterval(updateStatus, 30000);
 
-// Responsive panorama HFOV
 function adjustPanorama() {
     if (!window.viewer) return;
     viewer.setHfov(window.innerWidth < 600 ? 180 : window.innerWidth < 900 ? 220 : 250);
 }
 window.addEventListener('resize', adjustPanorama);
 window.addEventListener('orientationchange', adjustPanorama);
-adjustPanorama();
 </script>
 </body>
 </html>
