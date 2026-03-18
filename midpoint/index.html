@@ -248,7 +248,7 @@ function positionSplash() {
     splash.style.left = '-9999px'; splash.style.top = '-9999px';
     const sw = splash.offsetWidth; const sh = splash.offsetHeight;
     splash.style.left = (rect.right - sw - 10) + 'px';
-    splash.style.top  = (rect.bottom - sh - (rect.height * 0.45)) + 'px';
+    splash.style.top  = (rect.bottom - sh - (rect.height * 0.2)) + 'px';
 }
 function waitAndPosition() { requestAnimationFrame(() => requestAnimationFrame(positionSplash)); }
 const titleImg = document.querySelector('.midpoint-title');
