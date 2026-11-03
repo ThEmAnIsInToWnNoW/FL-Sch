@@ -2,694 +2,991 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Forest Lake – Bell Schedule</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#780d2d" />
+  <title>Forest Lake — Bell Schedule</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <meta name="apple-mobile-web-app-title" content="Fl Schedule" />
+  <meta name="apple-mobile-web-app-title" content="FL Schedule" />
   <link rel="manifest" href="/site.webmanifest" />
   <style>
-  :root {
-    --bg: #f9f6f3;
-    --card: #ffffff;
-    --text: #1e0f12;
-    --text-muted: #5c3f44;
-    --accent: #800020;
-    --accent-strong: #d4af37;
-    --accent-hover: #9c2b3a;
-    --border: #e0d4d8;
-    --shadow: 0 6px 16px rgba(30,15,18,0.08);
-    --fab: #800020;
-  }
+    :root {
+      color-scheme: light;
+      --bg: #f4f1ef;
+      --surface: #ffffff;
+      --surface-2: #faf7f5;
+      --surface-3: #f1e9e9;
+      --text: #24151a;
+      --muted: #75666b;
+      --accent: #780d2d;
+      --accent-2: #a92d4d;
+      --gold: #d1a94b;
+      --line: #eadfe2;
+      --shadow: 0 18px 55px rgba(54, 20, 32, .09);
+      --shadow-soft: 0 8px 24px rgba(54, 20, 32, .06);
+      --radius: 22px;
+      --success: #3d8b68;
+      --warning: #d18b31;
+    }
+    [data-theme="dark-maroon"] {
+      color-scheme: dark;
+      --bg: #130b10; --surface: #20141b; --surface-2: #291923; --surface-3: #35212d;
+      --text: #f7edf0; --muted: #c2aeb7; --accent: #e05b7b; --accent-2: #ff829b;
+      --gold: #e8c66e; --line: #49303c; --shadow: 0 18px 55px rgba(0,0,0,.28); --shadow-soft: 0 8px 24px rgba(0,0,0,.18);
+    }
+    [data-theme="forest"] {
+      --bg: #eef3ef; --surface: #ffffff; --surface-2: #f5f8f5; --surface-3: #e4eee7;
+      --text: #14251c; --muted: #607368; --accent: #1e6445; --accent-2: #33835f;
+      --gold: #c9a64e; --line: #d8e5dc; --shadow: 0 18px 55px rgba(20,55,36,.09); --shadow-soft: 0 8px 24px rgba(20,55,36,.06);
+    }
+    [data-theme="ocean"] {
+      --bg: #edf3f8; --surface: #ffffff; --surface-2: #f5f9fc; --surface-3: #e3edf5;
+      --text: #122438; --muted: #607589; --accent: #175a87; --accent-2: #287eae;
+      --gold: #e0ad54; --line: #d9e5ee; --shadow: 0 18px 55px rgba(18,48,75,.09); --shadow-soft: 0 8px 24px rgba(18,48,75,.06);
+    }
+    [data-theme="lavender"] {
+      --bg: #f2eff8; --surface: #ffffff; --surface-2: #faf8fd; --surface-3: #ece6f5;
+      --text: #241c35; --muted: #756b88; --accent: #67459a; --accent-2: #8b69bd;
+      --gold: #c9a75b; --line: #e4dced; --shadow: 0 18px 55px rgba(52,35,86,.09); --shadow-soft: 0 8px 24px rgba(52,35,86,.06);
+    }
+    [data-theme="slate"] {
+      --bg: #eef0f2; --surface: #ffffff; --surface-2: #f7f8f9; --surface-3: #e8ebee;
+      --text: #1d252d; --muted: #68737d; --accent: #3d5268; --accent-2: #607b96;
+      --gold: #c39c4e; --line: #dfe3e7; --shadow: 0 18px 55px rgba(28,43,57,.09); --shadow-soft: 0 8px 24px rgba(28,43,57,.06);
+    }
+    * { box-sizing: border-box; }
+    html { min-height: 100%; }
+    body {
+      margin: 0; min-height: 100vh; color: var(--text);
+      font-family: "DM Sans", "Manrope", system-ui, sans-serif;
+      background:
+        radial-gradient(ellipse at 8% 0%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 34rem),
+        radial-gradient(ellipse at 100% 20%, color-mix(in srgb, var(--gold) 10%, transparent), transparent 30rem),
+        var(--bg);
+      transition: background .25s ease, color .25s ease;
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent-2) 55%, white); outline-offset: 3px; }
+    .app-shell { width: min(1240px, calc(100% - 40px)); margin: 0 auto; padding: 34px 0 48px; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 26px; }
+    .brand { display: flex; align-items: center; gap: 15px; min-width: 0; }
+    .brand-mark {
+      width: 54px; height: 54px; flex: 0 0 54px; display: grid; place-items: center; border-radius: 17px;
+      color: #fff; font-weight: 800; font-size: 1.03rem; letter-spacing: -.06em;
+      background: linear-gradient(145deg, var(--accent-2), var(--accent)); box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 25%, transparent);
+    }
+    .eyebrow { color: var(--muted); text-transform: uppercase; letter-spacing: .16em; font-size: .68rem; font-weight: 800; }
+    h1 { margin: 3px 0 0; font-family: Manrope, sans-serif; font-size: clamp(1.35rem, 2.3vw, 1.95rem); letter-spacing: -.055em; line-height: 1.12; }
+    .top-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+    .button {
+      border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 13px;
+      padding: 11px 15px; font-weight: 700; font-size: .88rem; display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+      box-shadow: var(--shadow-soft); transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .button:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+    .button.primary { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 22%, transparent); }
+    .button.primary:hover { background: var(--accent-2); }
+    .button.ghost { box-shadow: none; background: transparent; }
+    .button.small { padding: 8px 11px; border-radius: 10px; font-size: .8rem; }
+    .hero-card {
+      position: relative; overflow: hidden; border-radius: 28px; padding: clamp(22px, 4vw, 38px);
+      color: #fff; background: linear-gradient(120deg, color-mix(in srgb, var(--accent) 96%, #210613), color-mix(in srgb, var(--accent-2) 84%, #4b152b));
+      box-shadow: 0 22px 55px color-mix(in srgb, var(--accent) 20%, transparent); margin-bottom: 22px;
+    }
+    .hero-card::before, .hero-card::after { content: ""; position: absolute; border-radius: 50%; pointer-events: none; }
+    .hero-card::before { width: 330px; height: 330px; right: -90px; top: -185px; border: 1px solid rgba(255,255,255,.16); box-shadow: 0 0 0 28px rgba(255,255,255,.035), 0 0 0 58px rgba(255,255,255,.025); }
+    .hero-card::after { width: 220px; height: 220px; right: 18%; bottom: -205px; background: rgba(255,255,255,.055); }
+    .hero-topline { display: flex; justify-content: space-between; align-items: center; gap: 12px; position: relative; z-index: 1; }
+    .live-label { display: inline-flex; align-items: center; gap: 8px; color: rgba(255,255,255,.76); font-size: .72rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #9be1b6; box-shadow: 0 0 0 5px rgba(155,225,182,.13); }
+    .day-chip { border: 1px solid rgba(255,255,255,.23); border-radius: 999px; padding: 7px 12px; color: rgba(255,255,255,.88); font-size: .77rem; font-weight: 700; background: rgba(255,255,255,.08); }
+    .hero-main { display: grid; grid-template-columns: minmax(0, 1fr) minmax(190px, 270px); align-items: end; gap: 26px; position: relative; z-index: 1; margin-top: 28px; }
+    .period-caption { color: rgba(255,255,255,.72); font-size: .88rem; font-weight: 600; margin-bottom: 5px; }
+    .period-name { font-family: Manrope, sans-serif; font-size: clamp(1.7rem, 4vw, 3.1rem); font-weight: 800; letter-spacing: -.06em; line-height: 1.05; margin: 0 0 13px; }
+    .hero-sub { color: rgba(255,255,255,.72); font-size: .9rem; }
+    .countdown-label { color: rgba(255,255,255,.68); text-transform: uppercase; letter-spacing: .13em; font-size: .67rem; font-weight: 800; margin-bottom: 3px; }
+    .hero-countdown { max-width: 100%; font-family: Manrope, sans-serif; font-size: clamp(3.2rem, 7vw, 5.7rem); line-height: .98; font-weight: 800; letter-spacing: -.075em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .hero-main > div:last-child { min-width: 0; }
+    .hero-countdown.with-milliseconds { font-size: clamp(2.2rem, 3.8vw, 3rem); letter-spacing: -.055em; }
+    .progress-track { height: 7px; margin-top: 27px; border-radius: 99px; background: rgba(255,255,255,.19); overflow: hidden; position: relative; z-index: 1; }
+    .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #f0d58a, #fff0c4); border-radius: inherit; transition: width .3s linear; }
+    .hero-bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 14px; margin-top: 13px; position: relative; z-index: 1; }
+    .hero-bottom small { color: rgba(255,255,255,.7); font-size: .76rem; }
+    .hero-bottom small { min-width: 0; }
+    .clock-pill { display: inline-flex; align-items: center; justify-content: flex-start; gap: clamp(8px, 1.6vw, 12px); flex: 0 0 auto; width: fit-content; max-width: 100%; padding: clamp(7px, 1.6vw, 9px) clamp(10px, 2.4vw, 14px); background: rgba(24,6,15,.18); border: 1px solid rgba(255,255,255,.18); border-radius: 12px; font-variant-numeric: tabular-nums; font-size: clamp(.82rem, 2.4vw, .95rem); font-weight: 700; white-space: nowrap; }
+    .clock-pill span { flex: 0 0 auto; color: rgba(255,255,255,.67); font-size: .72em; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; }
+    .clock-pill strong { display: inline-block; flex: 0 1 auto; min-width: 0; text-align: left; font-variant-numeric: tabular-nums; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(265px, .78fr); gap: 22px; align-items: start; }
+    .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-soft); overflow: hidden; }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 20px 22px 15px; }
+    .panel-title { margin: 0; font-size: 1.02rem; font-weight: 800; letter-spacing: -.03em; }
+    .panel-subtitle { margin: 4px 0 0; color: var(--muted); font-size: .78rem; }
+    .schedule-badge { padding: 6px 10px; border-radius: 999px; color: var(--accent); background: color-mix(in srgb, var(--accent) 9%, var(--surface)); font-size: .7rem; font-weight: 800; white-space: nowrap; }
+    .table-scroll { overflow-x: auto; padding: 0 14px 15px; }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: .86rem; min-width: 470px; }
+    thead th { background: var(--surface-2); color: var(--muted); text-transform: uppercase; letter-spacing: .09em; font-size: .66rem; font-weight: 800; padding: 12px 10px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    thead th:first-child { border-radius: 12px 0 0 0; text-align: left; }
+    thead th:last-child { border-radius: 0 12px 0 0; }
+    tbody td { text-align: center; padding: 11px 10px; border-bottom: 1px solid var(--line); color: var(--muted); font-variant-numeric: tabular-nums; }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody td:first-child { text-align: left; color: var(--text); font-weight: 800; }
+    tbody tr.active-period td { background: color-mix(in srgb, var(--gold) 13%, var(--surface)); color: var(--text); font-weight: 700; }
+    tbody tr.active-period td:first-child { border-left: 3px solid var(--gold); padding-left: 7px; }
+    tbody tr.active-column td.active-cell { color: var(--accent); font-weight: 800; }
+    .schedule-note { margin: 0 20px 17px; padding: 10px 12px; border-radius: 11px; background: var(--surface-2); color: var(--muted); font-size: .73rem; line-height: 1.45; }
+    .sidebar { display: grid; gap: 17px; }
+    .side-card { padding: 19px; }
+    .side-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+    .side-heading h2 { margin: 0; font-size: .94rem; font-weight: 800; letter-spacing: -.025em; }
+    .muted-label { color: var(--muted); font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; }
+    .next-event { display: flex; align-items: center; gap: 13px; }
+    .next-icon { width: 43px; height: 43px; display: grid; place-items: center; flex: 0 0 43px; border-radius: 14px; background: var(--surface-3); font-size: 1.15rem; }
+    .next-name { font-weight: 800; font-size: .94rem; }
+    .next-time { margin-top: 3px; color: var(--muted); font-size: .77rem; }
+    .weather-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .weather-main { display: flex; align-items: center; gap: 12px; }
+    .weather-icon { font-size: 2.35rem; line-height: 1; }
+    .weather-temp { font-family: Manrope, sans-serif; font-size: 2.15rem; font-weight: 800; letter-spacing: -.07em; font-variant-numeric: tabular-nums; }
+    .weather-desc { color: var(--muted); font-size: .77rem; margin-top: -2px; }
+    .weather-location { color: var(--muted); font-size: .67rem; text-align: right; }
+    .resource-list { display: grid; gap: 9px; }
+    .resource-link { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px; border-radius: 13px; text-decoration: none; background: var(--surface-2); border: 1px solid transparent; color: var(--text); transition: .18s ease; }
+    .resource-link:hover { border-color: color-mix(in srgb, var(--accent) 25%, var(--line)); transform: translateY(-1px); }
+    .resource-link.disabled { opacity: .45; pointer-events: none; }
+    .resource-left { display: flex; align-items: center; gap: 11px; min-width: 0; }
+    .resource-icon { width: 34px; height: 34px; flex: 0 0 34px; display: grid; place-items: center; border-radius: 10px; background: var(--surface-3); }
+    .resource-copy { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 5px; min-width: 0; line-height: 1.25; }
+    .resource-name { display: block; font-size: .82rem; font-weight: 800; line-height: 1.25; }
+    .resource-detail { display: block; color: var(--muted); font-size: .68rem; line-height: 1.3; margin: 0; }
+    .resource-arrow { color: var(--muted); font-size: 1rem; }
+    .footer-note { text-align: center; color: var(--muted); font-size: .72rem; margin-top: 22px; }
 
-  [data-theme="dark-deep-maroon"] {
-    --bg: #1a0d12;
-    --card: #2a1a22;
-    --text: #f0e6e8;
-    --text-muted: #b89ca3;
-    --accent: #c94b5e;
-    --accent-strong: #e6c34d;
-    --border: #3f2a35;
-    --shadow: 0 8px 24px rgba(0,0,0,0.5);
-    --fab: #b02e3f;
-  }
+    /* Fullscreen timer */
+    #fullscreen-overlay { position: fixed; inset: 0; z-index: 9000; display: none; align-items: center; justify-content: center; overflow: hidden; color: #fff; background: radial-gradient(ellipse at 50% 0%, #471426, #100b10 70%); }
+    #fullscreen-overlay[aria-hidden="false"] { display: flex; }
+    #fullscreen-overlay::before { content: ""; position: absolute; width: min(82vw, 850px); aspect-ratio: 1; border: 1px solid rgba(255,255,255,.09); border-radius: 50%; box-shadow: 0 0 0 60px rgba(255,255,255,.018), 0 0 0 120px rgba(255,255,255,.012); pointer-events: none; }
+    .fs-inner { position: relative; z-index: 1; width: min(1200px, calc(100% - 24px)); max-height: 100dvh; overflow-y: auto; scrollbar-width: none; text-align: center; padding: clamp(12px, 2.5vh, 30px) clamp(8px, 2vw, 20px); }
+    .fs-inner::-webkit-scrollbar { display: none; }
+    .fs-brand { color: rgba(255,255,255,.55); text-transform: uppercase; letter-spacing: .2em; font-size: .72rem; font-weight: 800; }
+    .fs-count-label { margin-top: clamp(18px, 4vh, 46px); color: rgba(255,255,255,.63); text-transform: uppercase; letter-spacing: .18em; font-size: clamp(.7rem, 1.5vw, .9rem); font-weight: 800; }
+    #fs-countdown { display: block; width: 100%; max-width: 100%; color: #f1d58d; font-family: Manrope, sans-serif; font-size: clamp(4rem, min(18vw, 18vh), 13rem); font-weight: 800; line-height: 1.06; letter-spacing: -.075em; font-variant-numeric: tabular-nums; text-shadow: 0 12px 55px rgba(0,0,0,.35); margin: 8px auto 0; white-space: nowrap; }
+    #fs-countdown.with-milliseconds { font-size: clamp(2.8rem, min(13vw, 14vh), 10rem); letter-spacing: -.05em; }
+    #fs-period { margin-top: clamp(14px, 3vh, 32px); font-family: Manrope, sans-serif; font-size: clamp(1.8rem, 5vw, 3.8rem); font-weight: 800; letter-spacing: -.055em; }
+    #fs-sub { margin-top: 7px; color: rgba(255,255,255,.66); font-size: clamp(.9rem, 2vw, 1.1rem); }
+    .fs-clock-wrap { margin-top: clamp(18px, 4vh, 40px); color: rgba(255,255,255,.52); text-transform: uppercase; letter-spacing: .14em; font-size: .68rem; font-weight: 800; }
+    #fs-clock { display: block; margin-top: 7px; color: rgba(255,255,255,.94); font-family: Manrope, sans-serif; font-size: clamp(1.7rem, 4vw, 2.8rem); font-weight: 700; letter-spacing: -.04em; font-variant-numeric: tabular-nums; text-transform: none; }
+    .fs-progress { width: min(510px, 75%); height: 5px; margin: 20px auto 0; border-radius: 99px; background: rgba(255,255,255,.16); overflow: hidden; }
+    #fs-progress-fill { height: 100%; width: 0%; background: #f1d58d; border-radius: inherit; }
+    .fs-close { position: absolute; top: 20px; right: 22px; z-index: 2; width: 45px; height: 45px; border: 1px solid rgba(255,255,255,.2); border-radius: 14px; color: #fff; background: rgba(255,255,255,.08); font-size: 1.5rem; }
+    .fs-hint { margin-top: 14px; color: rgba(255,255,255,.35); font-size: .68rem; }
 
-  body {
-    margin: 0;
-    font-family: 'Inter', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-  }
+    /* Ten-minute screen flash */
+    #warning-flash { position: fixed; inset: 0; z-index: 11000; pointer-events: none; opacity: 0; display: none; }
+    #warning-flash.active { display: block; animation: warningPulse .24s steps(1, end) infinite; }
+    body.flash-red #warning-flash { background: #c91432; }
+    body.flash-white #warning-flash { background: #fff; }
+    @keyframes warningPulse { 0%, 49% { opacity: .78; } 50%, 100% { opacity: 0; } }
 
-  .app {
-    max-width: 1100px;
-    margin: 20px auto;
-    padding: 20px;
-    background: var(--card);
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow);
-  }
-
-  header h1 {
-    margin: 0 0 4px;
-    font-family: 'Playfair Display', serif;
-    font-size: 2rem;
-    color: var(--accent);
-  }
-
-  .meta { font-size: 0.9rem; color: var(--text-muted); }
-
-  .status-card {
-    margin: 20px 0;
-    padding: 16px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, rgba(128,0,32,0.03), rgba(212,175,55,0.03));
-    border: 1px solid var(--border);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    align-items: center;
-  }
-
-  #current-time {
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: var(--accent-strong);
-  }
-
-  #current-period {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: var(--accent);
-  }
-
-  #time-left {
-    font-size: 1.25rem;
-    color: var(--accent-strong);
-  }
-
-  .layout {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 20px;
-  }
-
-  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
-
-  .table-wrap {
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.96rem;
-  }
-
-  thead th {
-    background: var(--accent);
-    color: white;
-    padding: 10px;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-  }
-
-  td, th {
-    border: 1px solid var(--border);
-    padding: 10px;
-    text-align: center;
-    vertical-align: middle;
-  }
-
-  /* Highlight styles */
-  tr.active-monfri td:nth-child(2) {
-    background: rgba(212,175,55,0.14);
-    font-weight: 600;
-    border-left: 4px solid var(--accent-strong);
-  }
-
-  tr.active-wed td:nth-child(3) {
-    background: rgba(212,175,55,0.14);
-    font-weight: 600;
-    border-left: 4px solid var(--accent-strong);
-  }
-
-  tr.active-period td:first-child {
-    background: rgba(212,175,55,0.14);
-    font-weight: 600;
-  }
-
-  /* Weather */
-  .weather-card {
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: var(--card);
-    padding: 12px;
-    box-shadow: var(--shadow);
-  }
-
-  .wx-temp { font-size: 2.4rem; font-weight: 800; color: var(--accent-strong); }
-  .wx-emoji { font-size: 3.5rem; }
-
-  /* FAB & menu */
-  .fab-wrap {
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-    z-index: 1000;
-  }
-
-  #fab-main {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: var(--fab);
-    color: white;
-    font-size: 28px;
-    border: none;
-    box-shadow: 0 6px 20px rgba(128,0,32,0.35);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .slide-layer {
-    display: none;
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-end;
-    margin-bottom: 16px;
-  }
-
-  .slide-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .slide-label {
-    background: var(--card);
-    padding: 6px 12px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    font-size: 0.85rem;
-    color: var(--text-muted);
-  }
-
-  .slide-btn {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: white;
-    border: none;
-    font-size: 1.3rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 3px 10px rgba(128,0,32,0.3);
-  }
-
-  .slide-btn:hover { background: var(--accent-hover); }
-
-  /* Theme picker inside menu */
-  .theme-picker {
-    display: none;
-    flex-direction: column;
-    gap: 10px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    margin-top: 8px;
-  }
-
-  .theme-picker-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .theme-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
-
-  .theme-option {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid transparent;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  }
-
-  .theme-option:hover {
-    transform: scale(1.1);
-    border-color: var(--accent-strong);
-  }
-
-  /* Fullscreen & modal */
-  #fullscreen-popup {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.94);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s;
-  }
-
-  #fullscreen-popup[aria-hidden="false"] { opacity: 1; pointer-events: auto; }
-
-  #fullscreen-popup-inner {
-    position: relative;
-    max-width: 90%;
-    text-align: center;
-    color: white;
-    padding: 20px;
-  }
-
-  #fullscreen-close {
-    position: absolute;
-    top: 16px;
-    right: 20px;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 2.2rem;
-    cursor: pointer;
-  }
-
-  .fs-period {
-    font-family: 'Playfair Display', serif;
-    font-size: 4.8rem;
-    margin: 0 0 8px;
-    color: var(--accent-strong);
-  }
-
-  .fs-sub { font-size: 1.4rem; opacity: 0.9; margin: 0 0 20px; }
-
-  .fs-countdown {
-    font-size: 8rem;
-    font-weight: 900;
-    color: #ffdd57;
-    line-height: 1;
-    margin: 0;
-    text-shadow: 0 6px 24px rgba(0,0,0,0.6);
-  }
-
-  .fs-ms { font-size: 1.8rem; opacity: 0.85; margin-top: 8px; }
-
-  .modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-  }
-
-  .modal[aria-hidden="false"] { display: flex; }
-
-  .modal-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    width: 360px;
-    max-width: 90%;
-    box-shadow: var(--shadow);
-  }
-
-  @media (max-width: 600px) {
-    .app { margin: 12px; padding: 16px; }
-    #current-time { font-size: 1.9rem; }
-    .fs-countdown { font-size: 5.5rem; }
-    .fs-period { font-size: 3.2rem; }
-  }
+    /* Modals */
+    .modal { position: fixed; inset: 0; z-index: 12000; display: none; align-items: center; justify-content: center; padding: 18px; background: rgba(10,7,10,.58); backdrop-filter: blur(8px); }
+    .modal.open { display: flex; }
+    .modal-card { width: min(650px, 100%); max-height: min(88vh, 900px); overflow-y: auto; padding: 24px; border-radius: 22px; border: 1px solid var(--line); background: var(--surface); color: var(--text); box-shadow: 0 28px 80px rgba(0,0,0,.28); }
+    .modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 20px; }
+    .modal-header h2 { margin: 0; font-size: 1.3rem; letter-spacing: -.04em; }
+    .modal-header p { margin: 5px 0 0; color: var(--muted); font-size: .8rem; line-height: 1.45; }
+    .icon-close { flex: 0 0 auto; width: 35px; height: 35px; border: 1px solid var(--line); border-radius: 11px; color: var(--muted); background: var(--surface-2); font-size: 1.15rem; }
+    .settings-section { padding: 17px 0; border-top: 1px solid var(--line); }
+    .settings-section[hidden] { display: none !important; }
+    .settings-section:first-of-type { border-top: 0; padding-top: 0; }
+    .section-label { margin: 0 0 13px; color: var(--accent); font-size: .69rem; font-weight: 800; text-transform: uppercase; letter-spacing: .14em; }
+    .setting-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 42px; margin: 8px 0; }
+    .setting-copy { min-width: 0; }
+    .setting-name { font-size: .84rem; font-weight: 700; }
+    .setting-help { margin-top: 3px; color: var(--muted); font-size: .71rem; line-height: 1.4; }
+    .setting-control { flex: 0 0 auto; }
+    select, input[type="url"], input[type="datetime-local"] { min-height: 38px; max-width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; color: var(--text); background: var(--surface-2); }
+    input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
+    .toggle { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: .78rem; white-space: nowrap; }
+    .url-field { display: grid; grid-template-columns: 1fr; gap: 7px; margin: 12px 0; }
+    .url-field label { font-size: .79rem; font-weight: 700; }
+    .url-field input { width: 100%; }
+    .test-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
+    .test-controls input { flex: 1 1 220px; }
+    .test-status { padding: 10px 12px; border-radius: 11px; background: var(--surface-2); color: var(--muted); font-size: .73rem; line-height: 1.4; margin-top: 11px; }
+    .modal-actions { display: flex; align-items: center; justify-content: flex-end; gap: 9px; padding-top: 17px; border-top: 1px solid var(--line); margin-top: 5px; }
+    .theme-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; }
+    .theme-choice { display: flex; align-items: center; gap: 10px; border: 1px solid var(--line); border-radius: 13px; background: var(--surface-2); color: var(--text); padding: 10px; text-align: left; font-size: .77rem; font-weight: 700; }
+    .theme-choice.selected { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+    .theme-swatch { width: 28px; height: 28px; flex: 0 0 28px; border-radius: 9px; background: var(--swatch); box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+    .toast { position: fixed; z-index: 13000; left: 50%; bottom: 22px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; background: #1d2922; color: white; border-radius: 12px; padding: 11px 15px; font-size: .8rem; font-weight: 700; box-shadow: 0 8px 24px rgba(0,0,0,.2); transition: .22s ease; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .test-badge { display: none; margin-left: 8px; padding: 4px 8px; border-radius: 99px; background: #f3c969; color: #3d2a08; font-size: .62rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; vertical-align: middle; }
+    body.test-mode .test-badge { display: inline-flex; }
+    @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } .sidebar { grid-template-columns: repeat(2, minmax(0,1fr)); } .sidebar .resources-panel { grid-column: 1 / -1; } }
+    @media (max-width: 620px) {
+      .app-shell { width: min(100% - 24px, 540px); padding-top: 18px; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .top-actions { justify-content: flex-start; width: 100%; }
+      .hero-card { border-radius: 22px; padding: 21px; }
+      .hero-main { grid-template-columns: 1fr; gap: 20px; margin-top: 23px; }
+      .hero-countdown { font-size: clamp(3.6rem, 15vw, 5rem); }
+      .hero-bottom { align-items: flex-start; flex-direction: column; }
+      .clock-pill { align-self: flex-start; }
+      .sidebar { grid-template-columns: 1fr; }
+      .sidebar .resources-panel { grid-column: auto; }
+      .panel-header { padding: 17px 17px 13px; }
+      .table-scroll { padding-inline: 9px; }
+      .schedule-note { margin-inline: 13px; }
+      .theme-options { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .setting-row { align-items: flex-start; }
+      .setting-control select { max-width: 150px; }
+      .fs-inner { padding-inline: 0; }
+      #fs-countdown { font-size: clamp(3.5rem, min(17vw, 15vh), 7.5rem); }
+      #fs-countdown.with-milliseconds { font-size: clamp(2.25rem, min(12.5vw, 11vh), 5.2rem); letter-spacing: -.045em; }
+      .hero-countdown.with-milliseconds { font-size: clamp(2.2rem, 10vw, 3.1rem); }
+    }
+    @media (max-width: 380px) {
+      .app-shell { width: calc(100% - 20px); }
+      .hero-card { padding: 17px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+      #warning-flash.active { animation: warningPulse .8s steps(1, end) infinite; }
+    }
   </style>
 </head>
 <body data-theme="light-maroon-gold">
-
-<div class="app">
-  <header>
-    <h1>Forest Lake – Bell Schedule</h1>
-    <div class="meta">2025–2026 School Year</div>
-  </header>
-
-  <div class="status-card">
-    <div id="current-time">--:--:--</div>
-    <div>
-      <div id="current-period">Current: —</div>
-      <div>Time left: <span id="time-left">—</span></div>
-    </div>
-  </div>
-
-  <div class="layout">
-    <div>
-      <div class="table-wrap">
-        <table aria-label="Bell schedule">
-          <thead>
-            <tr>
-              <th>Period</th>
-              <th>Mon/Tue/Thu/Fri</th>
-              <th>Wed (Ranger Connect)</th>
-            </tr>
-          </thead>
-          <tbody id="schedule-body">
-            <tr data-period="1"><td>1</td><td>7:45 – 8:35</td><td>7:45 – 8:30</td></tr>
-            <tr data-period="2"><td>2</td><td>8:40 – 9:30</td><td>8:35 – 9:25</td></tr>
-            <tr data-period="3"><td>3</td><td>9:35 – 10:25</td><td>9:30 – 10:15</td></tr>
-            <tr data-period="4"><td>4</td><td>10:30 – 11:20</td><td>10:20 – 11:05</td></tr>
-            <tr data-period="Ranger Connect"><td>Ranger Connect</td><td>—</td><td>11:10 – 11:35</td></tr>
-            <tr data-period="5"><td>5</td><td>11:25 – 12:40</td><td>11:40 – 12:50</td></tr>
-            <tr data-period="A Lunch"><td>A Lunch</td><td>11:20 – 11:50</td><td>11:35 – 12:05</td></tr>
-            <tr data-period="B Lunch"><td>B Lunch</td><td>11:45 – 12:15</td><td>12:00 – 12:30</td></tr>
-            <tr data-period="C Lunch"><td>C Lunch</td><td>12:15 – 12:45</td><td>12:25 – 12:55</td></tr>
-            <tr data-period="6"><td>6</td><td>12:45 – 13:35</td><td>12:55 – 13:40</td></tr>
-            <tr data-period="7"><td>7</td><td>13:40 – 14:30</td><td>13:45 – 14:30</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div>
-      <div class="weather-card" id="weather-card">
-        <div class="wx-emoji" id="wx-emoji">⛅</div>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">FL</div>
         <div>
-          <div class="wx-temp" id="wx-temp">--°F</div>
-          <div id="wx-desc">Loading…</div>
+          <div class="eyebrow">Forest Lake Area Schools · 2026–2027</div>
+          <h1>Bell Schedule <span class="test-badge">Test clock</span></h1>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- FAB + Menu -->
-<div class="fab-wrap">
-  <div class="slide-layer" id="slide-layer">
-    <div class="slide-item"><div class="slide-label">Fullscreen Timer</div><button class="slide-btn" id="btn-fullscreen">⏱️</button></div>
-    <div class="slide-item"><div class="slide-label">Lunch Menu</div><button class="slide-btn" onclick="window.open('https://menus.healthepro.com/organizations/865/sites/6998/menus/85788','_blank')">🍽️</button></div>
-    <div class="slide-item"><div class="slide-label">Family Calendar</div><button class="slide-btn" onclick="window.open('https://resources.finalsite.net/images/v1749233014/flaschoolsorg/jeyrjnloqnsrq2jkyuct/2025-2026Calendar.pdf','_blank')">🗓️</button></div>
-    <div class="slide-item"><div class="slide-label">Theme</div><button class="slide-btn" id="btn-theme">🎨</button></div>
-    <div class="slide-item"><div class="slide-label">Settings</div><button class="slide-btn" id="btn-settings">⚙️</button></div>
-    <div class="slide-item"><div class="slide-label">Playlist Song Suggest</div><button class="slide-btn" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSe28yp-R2MDOgrWE6vKOr6k5EUbzjlBWxmItwmUWih2L2Y5kQ/viewform?usp=dialog','_blank')">🎵</button></div>
-    <div class="theme-picker" id="theme-picker">
-      <div class="theme-picker-header">
-        <strong>Choose Theme</strong>
-        <button id="theme-close" style="font-size:0.9rem;padding:4px 8px;">Close</button>
+      <div class="top-actions">
+        <button class="button" id="btn-themes" type="button"><span aria-hidden="true">◐</span> Themes</button>
+        <button class="button" id="btn-settings" type="button"><span aria-hidden="true">⚙</span> Settings</button>
+        <button class="button primary" id="btn-fullscreen" type="button"><span aria-hidden="true">⛶</span> Fullscreen timer</button>
       </div>
-      <div class="theme-grid">
-        <div class="theme-option" data-theme="light-maroon-gold" style="background:#800020"></div>
-        <div class="theme-option" data-theme="dark-deep-maroon" style="background:#1a0d12"></div>
+    </header>
+
+    <section class="hero-card" aria-live="off">
+      <div class="hero-topline">
+        <div class="live-label"><span class="live-dot"></span><span id="status-kicker">Live school day</span></div>
+        <div class="day-chip" id="day-chip">Loading day…</div>
       </div>
+      <div class="hero-main">
+        <div>
+          <div class="period-caption" id="period-caption">Currently in</div>
+          <h2 class="period-name" id="current-period">Checking schedule…</h2>
+          <div class="hero-sub" id="period-sub">Your school-day overview</div>
+        </div>
+        <div>
+          <div class="countdown-label" id="countdown-label">Time remaining</div>
+          <div class="hero-countdown" id="time-left">—</div>
+        </div>
+      </div>
+      <div class="progress-track" aria-label="Period progress"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="hero-bottom">
+        <small id="progress-caption">The schedule updates automatically.</small>
+        <div class="clock-pill"><span>Current time</span><strong id="current-time">--:--</strong></div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <section class="panel schedule-panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">Today’s bell schedule</h2>
+            <p class="panel-subtitle" id="schedule-subtitle">Your active day’s periods and passing times</p>
+          </div>
+          <span class="schedule-badge" id="schedule-type">Mon / Tue / Thu / Fri</span>
+        </div>
+        <div class="table-scroll">
+          <table aria-label="Forest Lake bell schedule">
+            <thead>
+              <tr>
+                <th scope="col">Period</th>
+                <th scope="col" id="weekday-column">Mon / Tue / Thu / Fri</th>
+                <th scope="col" id="wednesday-column">Wednesday</th>
+              </tr>
+            </thead>
+            <tbody id="schedule-body"></tbody>
+          </table>
+        </div>
+        <p class="schedule-note">Lunch rows are shown separately because A, B, and C lunch overlap with Period 5. Your displayed active block follows the main schedule order.</p>
+      </section>
+
+      <aside class="sidebar">
+        <section class="panel side-card">
+          <div class="side-heading"><h2>Coming up</h2><span class="muted-label">Next bell</span></div>
+          <div class="next-event">
+            <div class="next-icon" aria-hidden="true">↗</div>
+            <div>
+              <div class="next-name" id="next-period">No upcoming period</div>
+              <div class="next-time" id="next-time">You’re all caught up.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel side-card" id="weather-card">
+          <div class="side-heading"><h2>Forest Lake weather</h2><span class="muted-label">Right now</span></div>
+          <div class="weather-row">
+            <div class="weather-main">
+              <div class="weather-icon" id="wx-emoji" aria-hidden="true">⛅</div>
+              <div><div class="weather-temp" id="wx-temp">--°</div><div class="weather-desc" id="wx-desc">Loading weather…</div></div>
+            </div>
+            <div class="weather-location">Forest Lake,<br>Minnesota</div>
+          </div>
+        </section>
+
+        <section class="panel side-card resources-panel">
+          <div class="side-heading"><h2>School links</h2><span class="muted-label">Quick access</span></div>
+          <div class="resource-list">
+            <a class="resource-link" id="lunch-link" href="https://menus.healthepro.com/organizations/865/sites/6998/menus/118715" target="_blank" rel="noopener noreferrer">
+              <span class="resource-left"><span class="resource-icon" aria-hidden="true">🍽️</span><span class="resource-copy"><span class="resource-name">Lunch menu</span><span class="resource-detail">What’s being served</span></span></span><span class="resource-arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="resource-link" id="calendar-link" href="https://resources.finalsite.net/images/v1778860022/flaschoolsorg/j1mzgfyyhbtm8ep07z7w/2026-2027Calendar.pdf" target="_blank" rel="noopener noreferrer">
+              <span class="resource-left"><span class="resource-icon" aria-hidden="true">🗓️</span><span class="resource-copy"><span class="resource-name">Family calendar</span><span class="resource-detail">School dates and events</span></span></span><span class="resource-arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
+          <p class="setting-help" style="margin:12px 1px 0">Update either link anytime in Settings → School links.</p>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <div id="fullscreen-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Fullscreen bell timer">
+    <button class="fs-close" id="fullscreen-close" type="button" aria-label="Close fullscreen timer">×</button>
+    <div class="fs-inner">
+      <div class="fs-brand">Forest Lake · Bell Schedule</div>
+      <div class="fs-count-label" id="fs-count-label">Time remaining</div>
+      <div id="fs-countdown">0:00</div>
+      <div id="fs-period">—</div>
+      <div id="fs-sub">—</div>
+      <div class="fs-clock-wrap">Current time <span id="fs-clock">--:--:--</span></div>
+      <div class="fs-progress"><div id="fs-progress-fill"></div></div>
+      <div class="fs-hint">Press Esc to close · Ten-minute warning flashes for 5 seconds</div>
+    </div>
+  </div>
+  <div id="warning-flash" aria-hidden="true"></div>
+
+  <!-- Settings -->
+  <div class="modal" id="settings-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div><h2 id="settings-title">Settings</h2><p>Personalize the display and keep your school links up to date.</p></div>
+        <button class="icon-close" type="button" data-close="settings-modal" aria-label="Close settings">×</button>
+      </div>
+
+      <section class="settings-section">
+        <h3 class="section-label">Clock display</h3>
+        <div class="setting-row"><div class="setting-copy"><div class="setting-name">Time format</div><div class="setting-help">Choose how the current time is displayed.</div></div><div class="setting-control"><select id="time-format"><option value="12">12-hour</option><option value="24">24-hour</option></select></div></div>
+        <div class="setting-row"><div class="setting-copy"><div class="setting-name">Show seconds</div><div class="setting-help">Display seconds beside the current time.</div></div><label class="toggle"><input type="checkbox" id="show-seconds"> On</label></div>
+        <div class="setting-row"><div class="setting-copy"><div class="setting-name">Show milliseconds</div><div class="setting-help">Show three decimal places. The display starts on the next full second and updates every 20 milliseconds, not every millisecond.</div></div><label class="toggle"><input type="checkbox" id="show-milliseconds"> On</label></div>
+        <div class="setting-row"><div class="setting-copy"><div class="setting-name">Show weather card</div><div class="setting-help">Hide or show the Forest Lake weather panel.</div></div><label class="toggle"><input type="checkbox" id="show-weather"> On</label></div>
+      </section>
+
+      <section class="settings-section">
+        <h3 class="section-label">Ten-minute warning</h3>
+        <div class="setting-row"><div class="setting-copy"><div class="setting-name">Enable screen flash</div><div class="setting-help">Flash briefly when an active block reaches 10 minutes remaining.</div></div><label class="toggle"><input type="checkbox" id="warning-enabled"> On</label></div>
+        <div class="setting-row"><div class="setting-copy"><div class="setting-name">Flash color</div><div class="setting-help">Choose the color used for the five-second warning.</div></div><div class="setting-control"><select id="warning-color"><option value="red">Red</option><option value="white">White</option></select></div></div>
+      </section>
+
+      <section class="settings-section" id="test-clock-section" hidden>
+        <h3 class="section-label">Schedule test clock</h3>
+        <p class="setting-help">Developer testing only. Open with Ctrl + Alt + Shift + T.</p>
+        <div class="setting-row"><div class="setting-copy"><div class="setting-name">Use a test date and time</div><div class="setting-help">Preview the schedule after school, on weekends, or at any time you choose. This does not change your computer clock.</div></div><label class="toggle"><input type="checkbox" id="test-enabled"> On</label></div>
+        <div class="test-controls">
+          <input type="datetime-local" id="test-datetime" aria-label="Test date and time">
+          <label class="toggle"><input type="checkbox" id="test-running" checked> Run clock</label>
+        </div>
+        <div class="test-controls">
+          <button class="button small" id="test-back" type="button">− 5 min</button>
+          <button class="button small" id="test-forward" type="button">+ 5 min</button>
+          <button class="button small" id="test-warning" type="button">Jump to 10-min warning</button>
+        </div>
+        <div class="test-status" id="test-status">Test clock is off. Turn it on to preview a chosen date and time.</div>
+      </section>
+
+      <section class="settings-section">
+        <h3 class="section-label">School links</h3>
+        <div class="url-field"><label for="lunch-url">New lunch menu link</label><input id="lunch-url" type="url" placeholder="https://…" autocomplete="url"><div class="setting-help">Paste the updated menu URL here. The Lunch menu shortcut will use this link.</div></div>
+        <div class="url-field"><label for="calendar-url">New family calendar link</label><input id="calendar-url" type="url" placeholder="https://…" autocomplete="url"><div class="setting-help">Paste the updated family calendar URL here.</div></div>
+      </section>
+      <div class="modal-actions"><button class="button ghost" type="button" data-close="settings-modal">Cancel</button><button class="button primary" id="save-settings" type="button">Save settings</button></div>
     </div>
   </div>
 
-  <button id="fab-main">+</button>
-</div>
-
-<!-- Fullscreen -->
-<div id="fullscreen-popup" aria-hidden="true">
-  <div id="fullscreen-popup-inner">
-    <button id="fullscreen-close">×</button>
-    <div>
-      <div id="fs-period" class="fs-period">—</div>
-      <div id="fs-sub" class="fs-sub">—</div>
-      <div id="fs-countdown" class="fs-countdown">0:00</div>
-      <div id="fs-ms" class="fs-ms"></div>
+  <!-- Theme picker -->
+  <div class="modal" id="theme-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="theme-title">
+    <div class="modal-card" style="max-width:520px">
+      <div class="modal-header"><div><h2 id="theme-title">Choose a theme</h2><p>Pick a color style for your bell schedule.</p></div><button class="icon-close" type="button" data-close="theme-modal" aria-label="Close themes">×</button></div>
+      <div class="theme-options" id="theme-options">
+        <button class="theme-choice" data-theme-choice="light-maroon-gold" type="button"><span class="theme-swatch" style="--swatch:#780d2d"></span>Maroon & gold</button>
+        <button class="theme-choice" data-theme-choice="dark-maroon" type="button"><span class="theme-swatch" style="--swatch:#e05b7b"></span>Dark maroon</button>
+        <button class="theme-choice" data-theme-choice="forest" type="button"><span class="theme-swatch" style="--swatch:#1e6445"></span>Forest green</button>
+        <button class="theme-choice" data-theme-choice="ocean" type="button"><span class="theme-swatch" style="--swatch:#175a87"></span>Ocean blue</button>
+        <button class="theme-choice" data-theme-choice="lavender" type="button"><span class="theme-swatch" style="--swatch:#67459a"></span>Lavender</button>
+        <button class="theme-choice" data-theme-choice="slate" type="button"><span class="theme-swatch" style="--swatch:#3d5268"></span>Slate</button>
+      </div>
+      <div class="modal-actions"><button class="button" type="button" data-close="theme-modal">Done</button></div>
     </div>
   </div>
-</div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<!-- Settings -->
-<div class="modal" id="settings-modal" aria-hidden="true">
-  <div class="modal-card">
-    <h3>Settings</h3>
-    <div class="modal-row">
-      <span>Time Format</span>
-      <select id="time-format">
-        <option value="12">12-hour</option>
-        <option value="24">24-hour</option>
-      </select>
-    </div>
-    <div class="modal-row">
-      <span>Show Seconds</span>
-      <input type="checkbox" id="show-seconds" checked>
-    </div>
-    <div class="modal-row">
-      <span>Show Milliseconds</span>
-      <input type="checkbox" id="show-milliseconds">
-    </div>
-    <div style="text-align:right; margin-top:16px;">
-      <button id="settings-close">Close</button>
-    </div>
-  </div>
-</div>
+  <script>
+    'use strict';
 
-<script>
-// Schedule data
-const SCHEDULE = [
-  { period:"1", monFri:"07:45-08:35", wed:"07:45-08:30" },
-  { period:"2", monFri:"08:40-09:30", wed:"08:35-09:25" },
-  { period:"3", monFri:"09:35-10:25", wed:"09:30-10:15" },
-  { period:"4", monFri:"10:30-11:20", wed:"10:20-11:05" },
-  { period:"Ranger Connect", monFri:"", wed:"11:10-11:35" },
-  { period:"5", monFri:"11:25-12:40", wed:"11:40-12:50" },
-  { period:"A Lunch", monFri:"11:20-11:50", wed:"11:35-12:05" },
-  { period:"B Lunch", monFri:"11:45-12:15", wed:"12:00-12:30" },
-  { period:"C Lunch", monFri:"12:15-12:45", wed:"12:25-12:55" },
-  { period:"6", monFri:"12:45-13:35", wed:"12:55-13:40" },
-  { period:"7", monFri:"13:40-14:30", wed:"13:45-14:30" }
-];
+    // Original Forest Lake schedule times preserved from the supplied HTML.
+    const SCHEDULE = [
+      { period: '1', monFri: '07:45-08:35', wed: '07:45-08:30' },
+      { period: '2', monFri: '08:40-09:30', wed: '08:35-09:25' },
+      { period: '3', monFri: '09:35-10:25', wed: '09:30-10:15' },
+      { period: '4', monFri: '10:30-11:20', wed: '10:20-11:05' },
+      { period: 'Ranger Connect', monFri: '', wed: '11:10-11:35' },
+      { period: '5', monFri: '11:25-12:40', wed: '11:40-12:50' },
+      { period: 'A Lunch', monFri: '11:20-11:50', wed: '11:35-12:05' },
+      { period: 'B Lunch', monFri: '11:45-12:15', wed: '12:00-12:30' },
+      { period: 'C Lunch', monFri: '12:15-12:45', wed: '12:25-12:55' },
+      { period: '6', monFri: '12:45-13:35', wed: '12:55-13:40' },
+      { period: '7', monFri: '13:40-14:30', wed: '13:45-14:30' }
+    ];
 
-let settings = { timeFormat:12, showSeconds:true, showMilliseconds:false };
+    const DEFAULTS = {
+      theme: 'light-maroon-gold', timeFormat: 12, showSeconds: true,
+      showMilliseconds: false, showWeather: true, warningEnabled: true,
+      warningColor: 'red', lunchUrl: 'https://menus.healthepro.com/organizations/865/sites/6998/menus/118715',
+      calendarUrl: 'https://resources.finalsite.net/images/v1778860022/flaschoolsorg/j1mzgfyyhbtm8ep07z7w/2026-2027Calendar.pdf'
+    };
+    const STORAGE_KEY = 'forestLakeBellScheduleSettingsV2';
+    let settings = { ...DEFAULTS };
+    let testEnabled = false; // Deliberately resets on page refresh to avoid leaving a fake clock running.
+    let testRunning = true;
+    let testToolsUnlocked = false;
+    let testBaseMs = Date.now();
+    let testWallBase = Date.now();
+    let warningTimer = null;
+    let uiTickTimer = null;
+    let millisecondsDisplayReady = false;
+    let lastRemainingByPeriod = new Map();
+    let warnedKeys = new Set();
+    let toastTimer = null;
 
-// Helpers
-function timeToMinutes(t) {
-  if (!t) return NaN;
-  const start = t.split('-')[0].trim();
-  const [h, m] = start.split(':').map(Number);
-  return h * 60 + (m || 0);
-}
+    const $ = (id) => document.getElementById(id);
+    const elements = {
+      currentTime: $('current-time'), currentPeriod: $('current-period'), timeLeft: $('time-left'),
+      periodCaption: $('period-caption'), periodSub: $('period-sub'), countdownLabel: $('countdown-label'),
+      dayChip: $('day-chip'), statusKicker: $('status-kicker'), progressFill: $('progress-fill'),
+      progressCaption: $('progress-caption'), scheduleType: $('schedule-type'), scheduleSubtitle: $('schedule-subtitle'),
+      scheduleBody: $('schedule-body'), nextPeriod: $('next-period'), nextTime: $('next-time'),
+      fsOverlay: $('fullscreen-overlay'), fsCountdown: $('fs-countdown'), fsPeriod: $('fs-period'),
+      fsSub: $('fs-sub'), fsClock: $('fs-clock'), fsProgress: $('fs-progress-fill'),
+      warningFlash: $('warning-flash'), toast: $('toast')
+    };
 
-function formatCountdown(remainingMinutes, showMs = false) {
-  if (remainingMinutes <= 0) return "0:00";
-  const totalSec = Math.floor(remainingMinutes * 60);
-  const min = Math.floor(totalSec / 60);
-  const sec = totalSec % 60;
-  if (showMs) {
-    const ms = Math.floor((remainingMinutes * 60 - totalSec) * 1000);
-    return `${min}:${sec.toString().padStart(2,'0')}.${ms.toString().padStart(3,'0')}`;
-  }
-  return `${min}:${sec.toString().padStart(2,'0')}`;
-}
-
-// Clock & column-specific highlight
-const timeEl   = document.getElementById('current-time');
-const periodEl = document.getElementById('current-period');
-const leftEl   = document.getElementById('time-left');
-const rows     = Array.from(document.querySelectorAll('#schedule-body tr'));
-
-function updateClock() {
-  const now = new Date();
-  const opts = { hour: 'numeric', minute: '2-digit', hour12: settings.timeFormat === 12 };
-  if (settings.showSeconds) opts.second = '2-digit';
-  timeEl.textContent = now.toLocaleTimeString([], opts);
-
-  const day = now.getDay();
-  const isWeekend = day === 0 || day === 6;
-  const isWednesday = day === 3;
-
-  if (isWeekend) {
-    periodEl.textContent = "No School (Weekend)";
-    leftEl.textContent = "—";
-    rows.forEach(r => {
-      r.classList.remove('active-monfri', 'active-wed', 'active-period');
-    });
-    return;
-  }
-
-  const key = isWednesday ? 'wed' : 'monFri';
-
-  const periods = SCHEDULE.map(p => ({
-    ...p,
-    start: timeToMinutes(p[key]?.split('-')[0]),
-    end:   timeToMinutes(p[key]?.split('-')[1])
-  })).filter(p => !isNaN(p.start) && !isNaN(p.end));
-
-  const nowMin = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60 + now.getMilliseconds() / 60000;
-
-  // Clear all highlights
-  rows.forEach(r => {
-    r.classList.remove('active-monfri', 'active-wed', 'active-period');
-  });
-
-  const current = periods.find(p => nowMin >= p.start && nowMin < p.end);
-
-  if (current) {
-    periodEl.textContent = current.period.includes('Lunch') ? current.period : `Period ${current.period}`;
-    leftEl.innerHTML = formatCountdown(current.end - nowMin, settings.showMilliseconds);
-
-    // Find matching row
-    const row = rows.find(r => r.dataset.period === current.period);
-    if (row) {
-      // Highlight period name
-      row.classList.add('active-period');
-
-      // Highlight only the correct time column
-      if (isWednesday) {
-        row.classList.add('active-wed');
+    function loadSettings() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        settings = { ...DEFAULTS, ...saved };
+        if (settings.lunchUrl === 'https://menus.healthepro.com/organizations/865/sites/6998/menus/85788') settings.lunchUrl = DEFAULTS.lunchUrl;
+        if (settings.calendarUrl === 'https://resources.finalsite.net/images/v1749233014/flaschoolsorg/jeyrjnloqnsrq2jkyuct/2025-2026Calendar.pdf') settings.calendarUrl = DEFAULTS.calendarUrl;
+      } catch (error) {
+        settings = { ...DEFAULTS };
+      }
+      if (!['light-maroon-gold', 'dark-maroon', 'forest', 'ocean', 'lavender', 'slate'].includes(settings.theme)) settings.theme = DEFAULTS.theme;
+      document.body.dataset.theme = settings.theme;
+      document.body.classList.toggle('flash-red', settings.warningColor === 'red');
+      document.body.classList.toggle('flash-white', settings.warningColor === 'white');
+    }
+    function persistSettings() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(settings)); } catch (error) { /* Storage may be disabled; app still works. */ }
+    }
+    function showToast(message) {
+      elements.toast.textContent = message;
+      elements.toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => elements.toast.classList.remove('show'), 2400);
+    }
+    function safeUrl(value) {
+      const raw = String(value || '').trim();
+      if (!raw) return '';
+      try {
+        const url = new URL(raw);
+        return (url.protocol === 'https:' || url.protocol === 'http:') ? url.href : '';
+      } catch { return ''; }
+    }
+    function updateResourceLinks() {
+      const pairs = [[$('lunch-link'), settings.lunchUrl], [$('calendar-link'), settings.calendarUrl]];
+      pairs.forEach(([anchor, value]) => {
+        const url = safeUrl(value);
+        if (url) { anchor.href = url; anchor.classList.remove('disabled'); anchor.removeAttribute('aria-disabled'); }
+        else { anchor.href = '#'; anchor.classList.add('disabled'); anchor.setAttribute('aria-disabled', 'true'); }
+      });
+    }
+    function applyTheme(theme) {
+      settings.theme = theme;
+      document.body.dataset.theme = theme;
+      persistSettings();
+      updateThemeChoices();
+    }
+    function updateThemeChoices() {
+      document.querySelectorAll('[data-theme-choice]').forEach(button => {
+        button.classList.toggle('selected', button.dataset.themeChoice === settings.theme);
+      });
+    }
+    function timeToMinutes(value) {
+      if (!value) return NaN;
+      const [hours, minutes] = value.split(':').map(Number);
+      return hours * 60 + minutes;
+    }
+    function rangeToTimes(range) {
+      if (!range) return null;
+      const [startText, endText] = range.split('-');
+      return { start: timeToMinutes(startText), end: timeToMinutes(endText), startText, endText };
+    }
+    function formatScheduleTime(value) {
+      if (!value) return '—';
+      const [hours, minutes] = value.split(':').map(Number);
+      const hour12 = hours % 12 || 12;
+      return settings.timeFormat === 24
+        ? `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`
+        : `${hour12}:${String(minutes).padStart(2, '0')} ${hours >= 12 ? 'PM' : 'AM'}`;
+    }
+    function formatScheduleRange(range) {
+      if (!range) return '—';
+      const times = rangeToTimes(range);
+      if (!times) return '—';
+      if (settings.timeFormat === 24) return `${formatScheduleTime(times.startText)} – ${formatScheduleTime(times.endText)}`;
+      // Match the school schedule graphic's compact 7:45am – 8:35am style.
+      return `${formatScheduleTime(times.startText).replace(' AM', 'am').replace(' PM', 'pm')} - ${formatScheduleTime(times.endText).replace(' AM', 'am').replace(' PM', 'pm')}`;
+    }
+    function getNow() {
+      if (!testEnabled) return new Date();
+      const timestamp = testBaseMs + (testRunning ? Date.now() - testWallBase : 0);
+      return new Date(timestamp);
+    }
+    function localDateTimeValue(date) {
+      const pad = n => String(n).padStart(2, '0');
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    }
+    function dateFromLocalInput(value) {
+      if (!value) return new Date();
+      const [datePart, timePart] = value.split('T');
+      const [year, month, day] = datePart.split('-').map(Number);
+      const [hours, minutes] = timePart.split(':').map(Number);
+      return new Date(year, month - 1, day, hours, minutes, 0, 0);
+    }
+    function formatClock(date) {
+      const opts = { hour: 'numeric', minute: '2-digit', hour12: settings.timeFormat === 12 };
+      if (settings.showSeconds) opts.second = '2-digit';
+      // Milliseconds are reserved for time-remaining countdowns, never the live clock.
+      return date.toLocaleTimeString([], opts);
+    }
+    function formatDuration(ms, showMs = false) {
+      if (!Number.isFinite(ms)) return '—';
+      const remaining = Math.max(0, Math.ceil(ms));
+      const totalSeconds = Math.floor(remaining / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      const millis = Math.floor(remaining % 1000);
+      const base = hours > 0
+        ? `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+        : `${minutes}:${String(seconds).padStart(2, '0')}`;
+      return showMs && settings.showMilliseconds && millisecondsDisplayReady ? `${base}.${String(millis).padStart(3, '0')}` : base;
+    }
+    function scheduleForDate(date) {
+      const day = date.getDay();
+      if (day === 0 || day === 6) return { isWeekend: true, isWednesday: false, periods: [] };
+      const key = day === 3 ? 'wed' : 'monFri';
+      const periods = SCHEDULE.map(item => {
+        const times = rangeToTimes(item[key]);
+        return times ? { ...item, ...times } : null;
+      }).filter(Boolean);
+      return { isWeekend: false, isWednesday: day === 3, key, periods };
+    }
+    function getStatus(date) {
+      const dayData = scheduleForDate(date);
+      const nowMinutes = date.getHours() * 60 + date.getMinutes() + date.getSeconds() / 60 + date.getMilliseconds() / 60000;
+      if (dayData.isWeekend) return { ...dayData, state: 'weekend', current: null, next: null, nowMinutes };
+      // Keep the original schedule order. Period 5 intentionally precedes the overlapping lunch rows.
+      const current = dayData.periods.find(period => nowMinutes >= period.start && nowMinutes < period.end) || null;
+      const next = dayData.periods.filter(period => period.start > nowMinutes).sort((a, b) => a.start - b.start)[0] || null;
+      if (current) return { ...dayData, state: 'active', current, next, nowMinutes };
+      if (next) return { ...dayData, state: nowMinutes < dayData.periods[0].start ? 'before' : 'passing', current: null, next, nowMinutes };
+      return { ...dayData, state: 'after', current: null, next: null, nowMinutes };
+    }
+    function minutesToClock(minutes) {
+      const h = Math.floor(minutes / 60), m = minutes % 60;
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    }
+    function renderSchedule(status) {
+      const activeKey = status.isWednesday ? 'wed' : 'monFri';
+      $('weekday-column').textContent = 'Mon / Tue / Thu / Fri';
+      $('wednesday-column').textContent = 'Wednesday';
+      elements.scheduleType.textContent = status.isWednesday ? 'Wednesday schedule' : (status.isWeekend ? 'Weekend' : 'Mon / Tue / Thu / Fri');
+      elements.scheduleSubtitle.textContent = status.isWednesday ? 'Ranger Connect schedule' : 'Standard weekday schedule';
+      elements.scheduleBody.innerHTML = '';
+      SCHEDULE.forEach(item => {
+        const row = document.createElement('tr');
+        row.dataset.period = item.period;
+        const first = document.createElement('td'); first.textContent = item.period;
+        const weekday = document.createElement('td'); weekday.textContent = formatScheduleRange(item.monFri);
+        const wednesday = document.createElement('td'); wednesday.textContent = formatScheduleRange(item.wed);
+        if (status.state === 'active' && status.current.period === item.period) row.classList.add('active-period');
+        if (activeKey === 'wed') wednesday.classList.add('active-cell'); else weekday.classList.add('active-cell');
+        row.append(first, weekday, wednesday);
+        elements.scheduleBody.appendChild(row);
+      });
+    }
+    function periodDisplayName(period) {
+      if (!period) return '—';
+      return period.period.includes('Lunch') || period.period === 'Ranger Connect' ? period.period : `Period ${period.period}`;
+    }
+    function dayName(date) { return date.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' }); }
+    function updateNext(status, date) {
+      if (status.next) {
+        elements.nextPeriod.textContent = periodDisplayName(status.next);
+        elements.nextTime.textContent = `${formatScheduleTime(status.next.startText)} · starts in ${formatDuration((status.next.start - status.nowMinutes) * 60000)}`;
       } else {
-        row.classList.add('active-monfri');
+        elements.nextPeriod.textContent = status.state === 'weekend' ? 'No school today' : 'No upcoming period';
+        elements.nextTime.textContent = status.state === 'after' ? 'The school day is finished.' : 'You’re all caught up.';
       }
     }
-  } else {
-    periodEl.textContent = "Passing / Before-After";
-    leftEl.textContent = "—";
-  }
-}
+    function updateWarning(status, date) {
+      if (!settings.warningEnabled || status.state !== 'active') {
+        lastRemainingByPeriod.clear();
+        return;
+      }
+      const current = status.current;
+      const remainingMs = (current.end - status.nowMinutes) * 60000;
+      const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}-${current.period}`;
+      const previous = lastRemainingByPeriod.get(key);
+      const inStartWindow = remainingMs <= 600000 && remainingMs >= 595000;
+      const crossedTen = previous !== undefined && previous > 600000 && remainingMs <= 600000;
+      if (!warnedKeys.has(key) && (inStartWindow || crossedTen)) {
+        warnedKeys.add(key);
+        triggerWarningFlash();
+      }
+      lastRemainingByPeriod.set(key, remainingMs);
+    }
+    function triggerWarningFlash() {
+      clearTimeout(warningTimer);
+      document.body.classList.toggle('flash-red', settings.warningColor === 'red');
+      document.body.classList.toggle('flash-white', settings.warningColor === 'white');
+      elements.warningFlash.classList.remove('active');
+      // Force a restart when testing the same warning repeatedly.
+      void elements.warningFlash.offsetWidth;
+      elements.warningFlash.classList.add('active');
+      warningTimer = setTimeout(() => elements.warningFlash.classList.remove('active'), 5000);
+    }
+    function updateFullscreen(status, date) {
+      if (elements.fsOverlay.getAttribute('aria-hidden') !== 'false') return;
+      elements.fsClock.textContent = formatClock(date);
+      if (status.state === 'active') {
+        const current = status.current;
+        const remainingMs = (current.end - status.nowMinutes) * 60000;
+        elements.fsCountdown.textContent = formatDuration(remainingMs, true);
+        elements.fsPeriod.textContent = periodDisplayName(current);
+        elements.fsSub.textContent = `Ends at ${formatScheduleTime(current.endText)} · ${date.toLocaleDateString([], { weekday: 'long' })}`;
+        const total = Math.max(1, current.end - current.start);
+        elements.fsProgress.style.width = `${Math.max(0, Math.min(100, ((status.nowMinutes - current.start) / total) * 100))}%`;
+        $('fs-count-label').textContent = 'Time remaining';
+      } else if (status.next) {
+        const remainingMs = (status.next.start - status.nowMinutes) * 60000;
+        elements.fsCountdown.textContent = formatDuration(remainingMs, true);
+        elements.fsPeriod.textContent = status.state === 'before' ? 'Before school' : 'Passing time';
+        elements.fsSub.textContent = `Next: ${periodDisplayName(status.next)} · starts at ${formatScheduleTime(status.next.startText)}`;
+        elements.fsProgress.style.width = '0%';
+        $('fs-count-label').textContent = 'Until next period';
+      } else {
+        elements.fsCountdown.textContent = '—';
+        elements.fsPeriod.textContent = status.state === 'weekend' ? 'No school today' : 'School day complete';
+        elements.fsSub.textContent = dayName(date);
+        elements.fsProgress.style.width = '100%';
+        $('fs-count-label').textContent = 'All done for today';
+      }
+    }
+    function startUiTicker() {
+      clearTimeout(uiTickTimer);
+      const needsFineTicks = settings.showMilliseconds && millisecondsDisplayReady && !(testEnabled && !testRunning);
+      const interval = needsFineTicks ? 20 : 1000;
+      const waitingForFirstFractionalSecond = settings.showMilliseconds && !millisecondsDisplayReady;
+      const now = Date.now();
+      const delay = waitingForFirstFractionalSecond
+        ? (1000 - (now % 1000))
+        : (interval - (now % interval));
+      uiTickTimer = setTimeout(() => {
+        if (waitingForFirstFractionalSecond) millisecondsDisplayReady = true;
+        updateUI();
+        startUiTicker();
+      }, delay || interval);
+    }
 
-setInterval(updateClock, 100);
-updateClock();
+    function updateUI() {
+      const now = getNow();
+      const status = getStatus(now);
+      const fineTimeEnabled = settings.showMilliseconds && millisecondsDisplayReady;
+      elements.timeLeft.classList.toggle('with-milliseconds', fineTimeEnabled);
+      elements.fsCountdown.classList.toggle('with-milliseconds', fineTimeEnabled);
+      const clock = formatClock(now);
+      elements.currentTime.textContent = clock;
+      elements.dayChip.textContent = dayName(now);
+      document.body.classList.toggle('test-mode', testEnabled);
+      renderSchedule(status);
+      updateNext(status, now);
+      updateFullscreen(status, now);
+      updateWarning(status, now);
 
-// Fullscreen timer (kept working)
-const popup = document.getElementById('fullscreen-popup');
-let fsTimer = null;
+      let remaining = null;
+      let progress = 0;
+      if (status.state === 'active') {
+        const c = status.current;
+        remaining = (c.end - status.nowMinutes) * 60000;
+        progress = ((status.nowMinutes - c.start) / (c.end - c.start)) * 100;
+        elements.periodCaption.textContent = 'Currently in';
+        elements.currentPeriod.textContent = periodDisplayName(c);
+        elements.periodSub.textContent = `This block ends at ${formatScheduleTime(c.endText)}`;
+        elements.countdownLabel.textContent = 'Time remaining';
+        elements.progressCaption.textContent = `${Math.round(Math.max(0, Math.min(100, progress)))}% of this block completed`;
+        elements.statusKicker.textContent = 'Live school day';
+      } else if (status.next) {
+        remaining = (status.next.start - status.nowMinutes) * 60000;
+        elements.periodCaption.textContent = status.state === 'before' ? 'Getting ready for' : 'Between classes';
+        elements.currentPeriod.textContent = status.state === 'before' ? 'Before school' : 'Passing time';
+        elements.periodSub.textContent = `Next up: ${periodDisplayName(status.next)} at ${formatScheduleTime(status.next.startText)}`;
+        elements.countdownLabel.textContent = 'Until next period';
+        elements.progressCaption.textContent = status.state === 'before' ? 'The first bell is coming up.' : 'Time until the next scheduled block.';
+        elements.statusKicker.textContent = 'Schedule overview';
+      } else {
+        elements.periodCaption.textContent = status.state === 'weekend' ? 'Enjoy your' : 'That’s a wrap';
+        elements.currentPeriod.textContent = status.state === 'weekend' ? 'Weekend' : 'School day complete';
+        elements.periodSub.textContent = status.state === 'weekend' ? 'No weekday bell schedule today.' : 'You’ve made it through the schedule.';
+        elements.countdownLabel.textContent = 'Time remaining';
+        elements.progressCaption.textContent = 'No more scheduled periods today.';
+        elements.statusKicker.textContent = status.state === 'weekend' ? 'No school today' : 'School day complete';
+      }
+      elements.timeLeft.textContent = remaining === null ? '—' : formatDuration(remaining, true);
+      elements.progressFill.style.width = `${Math.max(0, Math.min(100, progress))}%`;
+      updateTestStatus(now, status);
+    }
 
-function updateFullscreen() {
-  const now = new Date();
-  const isWednesday = now.getDay() === 3;
-  const key = isWednesday ? 'wed' : 'monFri';
+    function updateTestStatus(now = getNow(), status = getStatus(now)) {
+      const statusEl = $('test-status');
+      if (!testEnabled) {
+        statusEl.textContent = 'Test clock is off. Turn it on to preview a chosen date and time. Your real device clock is being used.';
+      } else {
+        const mode = testRunning ? 'running' : 'paused';
+        let location = status.state === 'active' ? `Previewing ${periodDisplayName(status.current)}.` : status.state === 'weekend' ? 'This date is a weekend.' : status.state === 'after' ? 'This is after the final scheduled period.' : `Next: ${periodDisplayName(status.next)}.`;
+        statusEl.textContent = `Test clock ${mode}: ${dayName(now)} at ${formatClock(now)}. ${location}`;
+      }
+    }
+    function setTestTime(date) {
+      testBaseMs = date.getTime();
+      testWallBase = Date.now();
+      $('test-datetime').value = localDateTimeValue(date);
+      lastRemainingByPeriod.clear();
+      warnedKeys.clear();
+      updateUI();
+    }
+    function openModal(id) {
+      $(id).classList.add('open');
+      $(id).setAttribute('aria-hidden', 'false');
+    }
+    function closeModal(id) {
+      $(id).classList.remove('open');
+      $(id).setAttribute('aria-hidden', 'true');
+      if (id === 'settings-modal') {
+        $('test-clock-section').hidden = true;
+        testToolsUnlocked = false;
+      }
+    }
+    function populateSettings() {
+      $('time-format').value = String(settings.timeFormat);
+      $('show-seconds').checked = settings.showSeconds;
+      $('show-milliseconds').checked = settings.showMilliseconds;
+      $('show-weather').checked = settings.showWeather;
+      $('warning-enabled').checked = settings.warningEnabled;
+      $('warning-color').value = settings.warningColor;
+      $('test-enabled').checked = testEnabled;
+      $('test-running').checked = testRunning;
+      $('test-datetime').value = localDateTimeValue(testEnabled ? getNow() : new Date());
+      $('lunch-url').value = settings.lunchUrl || '';
+      $('calendar-url').value = settings.calendarUrl || '';
+      updateTestStatus();
+    }
+    function saveSettings() {
+      const previousMilliseconds = settings.showMilliseconds;
+      const lunchInput = $('lunch-url').value.trim();
+      const calendarInput = $('calendar-url').value.trim();
+      if (lunchInput && !safeUrl(lunchInput)) { showToast('Please enter a valid lunch menu URL (http or https).'); $('lunch-url').focus(); return; }
+      if (calendarInput && !safeUrl(calendarInput)) { showToast('Please enter a valid family calendar URL (http or https).'); $('calendar-url').focus(); return; }
+      settings.timeFormat = Number($('time-format').value) === 24 ? 24 : 12;
+      settings.showSeconds = $('show-seconds').checked;
+      settings.showMilliseconds = $('show-milliseconds').checked;
+      if (settings.showMilliseconds !== previousMilliseconds) millisecondsDisplayReady = false;
+      settings.showWeather = $('show-weather').checked;
+      settings.warningEnabled = $('warning-enabled').checked;
+      settings.warningColor = $('warning-color').value === 'white' ? 'white' : 'red';
+      settings.lunchUrl = lunchInput || '';
+      settings.calendarUrl = calendarInput || '';
+      // The test clock is controlled only by its own controls, which apply changes the moment they are used.
+      // Saving regular settings must never re-read the test date/time field, or it would reset the running clock.
+      $('weather-card').style.display = settings.showWeather ? '' : 'none';
+      document.body.classList.toggle('flash-red', settings.warningColor === 'red');
+      document.body.classList.toggle('flash-white', settings.warningColor === 'white');
+      lastRemainingByPeriod.clear();
+      warnedKeys.clear();
+      persistSettings();
+      updateResourceLinks();
+      updateUI();
+      startUiTicker();
+      closeModal('settings-modal');
+      showToast('Settings saved.');
+    }
+    function openFullscreen() {
+      elements.fsOverlay.setAttribute('aria-hidden', 'false');
+      updateUI();
+      if (document.documentElement.requestFullscreen) {
+        const request = document.documentElement.requestFullscreen();
+        if (request && typeof request.catch === 'function') request.catch(() => {});
+      }
+    }
+    function closeFullscreen() {
+      elements.fsOverlay.setAttribute('aria-hidden', 'true');
+      if (document.fullscreenElement && document.exitFullscreen) {
+        const result = document.exitFullscreen();
+        if (result && typeof result.catch === 'function') result.catch(() => {});
+      }
+    }
 
-  const periods = SCHEDULE.map(p => ({
-    ...p,
-    start: timeToMinutes(p[key]?.split('-')[0]),
-    end:   timeToMinutes(p[key]?.split('-')[1])
-  })).filter(p => !isNaN(p.start) && !isNaN(p.end));
+    // Main controls
+    $('btn-settings').addEventListener('click', () => { testToolsUnlocked = false; $('test-clock-section').hidden = true; populateSettings(); openModal('settings-modal'); });
+    $('btn-themes').addEventListener('click', () => { updateThemeChoices(); openModal('theme-modal'); });
+    $('btn-fullscreen').addEventListener('click', openFullscreen);
+    $('fullscreen-close').addEventListener('click', closeFullscreen);
+    elements.fsOverlay.addEventListener('click', event => { if (event.target === elements.fsOverlay) closeFullscreen(); });
+    document.addEventListener('keydown', event => {
+      // Hidden developer shortcut: Ctrl + Alt + Shift + T. It is not shown as a normal UI control.
+      const targetIsEditable = event.target && event.target.closest && event.target.closest('input, textarea, select, [contenteditable="true"]');
+      if (event.ctrlKey && event.altKey && event.shiftKey && event.key.toLowerCase() === 't' && !targetIsEditable) {
+        event.preventDefault();
+        testToolsUnlocked = true;
+        $('test-clock-section').hidden = false;
+        populateSettings();
+        openModal('settings-modal');
+        showToast('Developer test tools unlocked.');
+        return;
+      }
+      if (event.key === 'Escape') {
+        if (elements.fsOverlay.getAttribute('aria-hidden') === 'false') closeFullscreen();
+        if ($('settings-modal').classList.contains('open')) closeModal('settings-modal');
+        if ($('theme-modal').classList.contains('open')) closeModal('theme-modal');
+      }
+    });
+    document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => closeModal(button.dataset.close)));
+    document.querySelectorAll('.modal').forEach(modal => modal.addEventListener('click', event => { if (event.target === modal) closeModal(modal.id); }));
+    document.querySelectorAll('[data-theme-choice]').forEach(button => button.addEventListener('click', () => applyTheme(button.dataset.themeChoice)));
+    $('save-settings').addEventListener('click', saveSettings);
 
-  const nowMin = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60 + now.getMilliseconds() / 60000;
+    // Test clock controls. Time advances at normal speed unless paused.
+    $('test-enabled').addEventListener('change', event => {
+      testEnabled = event.target.checked;
+      if (testEnabled) {
+        const chosen = dateFromLocalInput($('test-datetime').value || localDateTimeValue(new Date()));
+        testBaseMs = chosen.getTime(); testWallBase = Date.now();
+      }
+      lastRemainingByPeriod.clear(); warnedKeys.clear(); updateUI();
+    });
+    $('test-running').addEventListener('change', event => {
+      if (testEnabled) {
+        const current = getNow();
+        testBaseMs = current.getTime(); testWallBase = Date.now();
+      }
+      testRunning = event.target.checked;
+      updateUI();
+      startUiTicker();
+    });
+    $('test-datetime').addEventListener('change', event => {
+      setTestTime(dateFromLocalInput(event.target.value));
+      startUiTicker();
+    });
+    function adjustTestMinutes(delta) {
+      const current = testEnabled ? getNow() : new Date();
+      const next = new Date(current.getTime() + delta * 60000);
+      testEnabled = true; $('test-enabled').checked = true;
+      setTestTime(next); updateUI();
+    }
+    $('test-back').addEventListener('click', () => adjustTestMinutes(-5));
+    $('test-forward').addEventListener('click', () => adjustTestMinutes(5));
+    $('test-warning').addEventListener('click', () => {
+      const now = testEnabled ? getNow() : new Date();
+      const status = getStatus(now);
+      let target;
+      if (status.state === 'active') target = status.current.end;
+      else if (status.next) target = status.next.end;
+      else {
+        const dayData = scheduleForDate(now);
+        const first = dayData.periods[0];
+        if (!first) { showToast('Choose a weekday to test the 10-minute warning.'); return; }
+        target = first.end;
+      }
+      const base = new Date(now);
+      base.setHours(Math.floor(target / 60), target % 60, 0, 0);
+      base.setTime(base.getTime() - 10 * 60000);
+      testEnabled = true; testRunning = false;
+      $('test-enabled').checked = true; $('test-running').checked = false;
+      setTestTime(base);
+      // Triggering at the exact ten-minute threshold makes it easy to test the flash immediately.
+      updateUI();
+      showToast('Test clock set to the 10-minute warning point.');
+    });
 
-  const current = periods.find(p => nowMin >= p.start && nowMin < p.end);
-  const next = periods.find(p => nowMin < p.start);
+    // Weather from Open-Meteo; the schedule itself works without an internet connection.
+    function weatherDescription(code) {
+      if (code === 0) return ['☀️', 'Clear sky'];
+      if ([1, 2].includes(code)) return ['🌤️', 'Mostly clear'];
+      if (code === 3) return ['☁️', 'Overcast'];
+      if ([45, 48].includes(code)) return ['🌫️', 'Foggy'];
+      if ([51, 53, 55, 56, 57].includes(code)) return ['🌦️', 'Drizzle'];
+      if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return ['🌧️', 'Rain'];
+      if ([71, 73, 75, 77, 85, 86].includes(code)) return ['❄️', 'Snow'];
+      if ([95, 96, 99].includes(code)) return ['⛈️', 'Thunderstorm'];
+      return ['⛅', 'Current conditions'];
+    }
+    async function loadWeather() {
+      try {
+        const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=45.28&longitude=-92.99&current=temperature_2m,weather_code&temperature_unit=fahrenheit&timezone=America%2FChicago');
+        if (!response.ok) throw new Error('Weather unavailable');
+        const data = await response.json();
+        const [icon, description] = weatherDescription(data.current.weather_code);
+        $('wx-emoji').textContent = icon;
+        $('wx-temp').textContent = `${Math.round(data.current.temperature_2m)}°`;
+        $('wx-desc').textContent = description;
+      } catch (error) {
+        $('wx-desc').textContent = 'Weather unavailable';
+      }
+    }
 
-  if (current) {
-    document.getElementById('fs-period').textContent = current.period.includes('Lunch') ? current.period : `Period ${current.period}`;
-    document.getElementById('fs-sub').textContent = `until ${current.end.toString().padStart(4,'0').replace(/(\d{2})(\d{2})/,'$1:$2')}`;
-    document.getElementById('fs-countdown').innerHTML = formatCountdown(current.end - nowMin, settings.showMilliseconds);
-  } else if (next) {
-    document.getElementById('fs-period').textContent = "Passing";
-    document.getElementById('fs-sub').textContent = `Next: ${next.period}`;
-    document.getElementById('fs-countdown').innerHTML = formatCountdown(next.start - nowMin, settings.showMilliseconds);
-  } else {
-    document.getElementById('fs-period').textContent = "No class";
-    document.getElementById('fs-sub').textContent = "";
-    document.getElementById('fs-countdown').textContent = "";
-  }
-}
-
-function openFullscreen() {
-  popup.setAttribute('aria-hidden', 'false');
-  updateFullscreen();
-  fsTimer = setInterval(updateFullscreen, 60);
-}
-
-function closeFullscreen() {
-  popup.setAttribute('aria-hidden', 'true');
-  clearInterval(fsTimer);
-  fsTimer = null;
-}
-
-document.getElementById('btn-fullscreen').onclick = openFullscreen;
-document.getElementById('fullscreen-close').onclick = closeFullscreen;
-popup.onclick = e => { if (e.target === popup) closeFullscreen(); };
-
-// FAB + Theme
-const fab = document.getElementById('fab-main');
-const layer = document.getElementById('slide-layer');
-const themeBtn = document.getElementById('btn-theme');
-const themePicker = document.getElementById('theme-picker');
-
-fab.onclick = () => {
-  const isOpen = layer.style.display === 'flex';
-  layer.style.display = isOpen ? 'none' : 'flex';
-  fab.textContent = isOpen ? '+' : '×';
-  if (!isOpen) themePicker.style.display = 'none';
-};
-
-document.addEventListener('click', e => {
-  if (!e.target.closest('.fab-wrap') && layer.style.display === 'flex') {
-    layer.style.display = 'none';
-    fab.textContent = '+';
-    themePicker.style.display = 'none';
-  }
-});
-
-themeBtn.onclick = () => {
-  themePicker.style.display = themePicker.style.display === 'flex' ? 'none' : 'flex';
-};
-
-document.getElementById('theme-close').onclick = () => {
-  themePicker.style.display = 'none';
-};
-
-document.querySelectorAll('.theme-option').forEach(el => {
-  el.onclick = () => {
-    document.body.setAttribute('data-theme', el.dataset.theme);
-    localStorage.setItem('theme', el.dataset.theme);
-    themePicker.style.display = 'none';
-  };
-});
-
-const savedTheme = localStorage.getItem('theme') || 'light-maroon-gold';
-document.body.setAttribute('data-theme', savedTheme);
-
-// Settings
-document.getElementById('btn-settings').onclick = () => {
-  document.getElementById('settings-modal').style.display = 'flex';
-  document.getElementById('settings-modal').setAttribute('aria-hidden', 'false');
-};
-
-document.getElementById('settings-close').onclick = () => {
-  document.getElementById('settings-modal').style.display = 'none';
-  document.getElementById('settings-modal').setAttribute('aria-hidden', 'true');
-};
-
-document.getElementById('time-format').onchange = e => { settings.timeFormat = +e.target.value; updateClock(); };
-document.getElementById('show-seconds').onchange = e => { settings.showSeconds = e.target.checked; updateClock(); };
-document.getElementById('show-milliseconds').onchange = e => { settings.showMilliseconds = e.target.checked; updateClock(); };
-
-// Weather
-async function loadWeather() {
-  try {
-    const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=45.28&longitude=-92.99&current=temperature_2m,weathercode&temperature_unit=fahrenheit&timezone=America/Chicago');
-    const data = await res.json();
-    document.getElementById('wx-temp').textContent = Math.round(data.current.temperature_2m) + '°F';
-    document.getElementById('wx-desc').textContent = data.current.weathercode === 0 ? 'Clear' : 'Cloudy/Partly Cloudy';
-  } catch {}
-}
-loadWeather();
-setInterval(loadWeather, 600000);
-</script>
+    // Start app.
+    loadSettings();
+    updateResourceLinks();
+    $('weather-card').style.display = settings.showWeather ? '' : 'none';
+    $('test-datetime').value = localDateTimeValue(new Date());
+    updateUI();
+    updateThemeChoices();
+    startUiTicker();
+    loadWeather();
+    setInterval(loadWeather, 600000);
+  </script>
 </body>
 </html>
-
